@@ -58,7 +58,11 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        - name: discovery.zen.ping.unicast.hosts
+        - name: PROCESSORS
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.cpu
+        - name: discovery.seed_hosts
           value: {{ template "fullname" . }}-discovery
         {{- range $key, $value :=  .Values.odfe.env }}
         - name: {{ $key }}
@@ -76,6 +80,9 @@ spec:
           protocol: TCP
         - containerPort: 9300
           name: transport
+          protocol: TCP
+        - containerPort: 9600
+          name: metrics
           protocol: TCP
         livenessProbe:
           tcpSocket:

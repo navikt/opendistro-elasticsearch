@@ -18,10 +18,11 @@ spec:
     team: {{ .Values.odfe.env.team  }}
   ports:
   - name: http
-    port: {{ .Values.service.httpPort }}
-    targetPort: 9200
+    port: 9200
     protocol: TCP
   - name: transport
-    port: {{ .Values.service.transportPort }}
-    targetPort: 9300
+    port: 9300
     protocol: TCP
+  - name: metrics
+    port: 9600
+

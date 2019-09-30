@@ -58,10 +58,16 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
+        - name: cluster.initial_master_nodes
+          value: "{{ template "masternodes" . }}"
         - name: NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: PROCESSORS
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.cpu
         - name: discovery.seed_hosts
           value: {{ template "fullname" . }}-discovery
         {{- range $key, $value :=  .Values.odfe.env }}

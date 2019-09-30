@@ -1,0 +1,72 @@
+odfe:
+  serviceType: ClusterIP
+  env:
+    opendistro_security.disabled: true
+    team: "teamname"
+    cluster.name: "milkyway"
+    http.compression: "true"
+    odfe_profile: "dev"
+    network.host: "0.0.0.0"
+  image:
+    repository: amazon/opendistro-for-elasticsearch
+    tag: 1.2.0
+    pullPolicy: Always
+  stateful:
+    enabled: true
+    class: "rook-ceph-block"
+
+master:
+  replicas: 3
+  antiAffinity: "soft"
+  resources:
+    requests:
+      memory: 256Mi
+  env:
+    ES_JAVA_OPTS: "-Xms256m -Xmx256m"
+    node.master: true
+    node.data: false
+    node.ingest: false
+  stateful:
+    size: 1Gi
+
+ingest:
+  replicas: 2
+  antiAffinity: "soft"
+  heapMemory: 256m
+  resources:
+    requests:
+      memory: 256Mi
+  env:
+    ES_JAVA_OPTS: "-Xms256m -Xmx256m"
+    node.master: false
+    node.data: false
+    node.ingest: true
+
+data:
+  replicas: 3
+  antiAffinity: "soft"
+  heapMemory: 256m
+  resources:
+    requests:
+      memory: 256Mi
+  env:
+    ES_JAVA_OPTS: "-Xms256m -Xmx256m"
+    node.master: false
+    node.data: true
+    node.ingest: false
+  stateful:
+    size: 4Gi
+
+kibana:
+  enabled: true
+  replicas: 1
+  httpPort: 80
+  resources:
+    limits:
+      cpu: 1000m
+    requests:
+      cpu: 100m
+  env:
+    SERVER_SSL_ENABLED: "false"
+    SERVER_SSL_KEY: /usr/share/kibana/config/odfe-node2.key
+    SERVER_SSL_CERTIFICATE: /usr/share/kibana/config/odfe-node2.pem

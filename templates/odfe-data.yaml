@@ -62,7 +62,11 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        - name: discovery.zen.ping.unicast.hosts
+        - name: PROCESSORS
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.cpu
+        - name: discovery.seed_hosts
           value: {{ template "fullname" . }}-discovery
         {{- range $key, $value :=  .Values.odfe.env }}
         - name: {{ $key }}
@@ -81,7 +85,7 @@ spec:
         livenessProbe:
           tcpSocket:
             port: 9300
-          initialDelaySeconds: 20
+          initialDelaySeconds: 60
           periodSeconds: 10
         volumeMounts:
         - name: storage

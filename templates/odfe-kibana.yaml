@@ -47,9 +47,9 @@ spec:
           value: {{ $value | quote }}
         {{- end }}
         - name: ELASTICSEARCH_URL
-          value: http://{{ template "fullname" . }}:{{ .Values.service.httpPort }}
+          value: http://{{ template "fullname" . }}:9200
         - name: ELASTICSEARCH_HOSTS
-          value: http://{{ template "fullname" . }}:{{ .Values.service.httpPort }}
+          value: http://{{ template "fullname" . }}:9200
         {{- range $key, $value :=  .Values.kibana.env }}
         - name: {{ $key }}
           value: {{ $value | quote }}
