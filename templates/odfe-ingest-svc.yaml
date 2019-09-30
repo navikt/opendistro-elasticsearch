@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    component: {{ template "fullname" . }}
+    role: ingest
+    team: {{ .Values.odfe.env.team  }}
+spec:
+  type: {{ .Values.odfe.serviceType }}
+  selector:
+    component: {{ template "fullname" . }}
+    role: ingest
+    team: {{ .Values.odfe.env.team  }}
+  ports:
+  - name: http
+    port: {{ .Values.service.httpPort }}
+    targetPort: 9200
+    protocol: TCP
+  - name: transport
+    port: {{ .Values.service.transportPort }}
+    targetPort: 9300
+    protocol: TCP
