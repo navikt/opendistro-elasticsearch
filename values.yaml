@@ -1,7 +1,7 @@
 odfe:
   serviceType: ClusterIP
   env:
-    opendistro_security.disabled: true
+    opendistro_security.disabled: "false"
     team: "teamname"
     cluster.name: "milkyway"
     http.compression: "true"
