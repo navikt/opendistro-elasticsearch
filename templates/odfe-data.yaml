@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: {{ if .Values.odfe.stateful.enabled }}StatefulSet{{ else }}Deployment{{ end }}
+metadata:
+  name: {{ template "fullname" . }}-data
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    component: {{ template "fullname" . }}
+    role: data
+    team: {{ .Values.odfe.env.team  }}
+spec:
+  {{- if .Values.odfe.stateful.enabled }}
+  serviceName: {{ template "fullname" . }}-data
+  {{- end }}
+  replicas: {{ .Values.data.replicas }}
+  podManagementPolicy: Parallel
+  selector:
+    matchLabels:
+      component: {{ template "fullname" . }}
+      role: data
+      team: {{ .Values.odfe.env.team  }}
+  template:
+    metadata:
+      labels:
+        component: {{ template "fullname" . }}
+        role: data
+        team: {{ .Values.odfe.env.team  }}
+    spec:
+      {{- if eq .Values.data.antiAffinity "hard" }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels:
+                  component: {{ template "fullname" . }}
+                  role: data
+      {{- else if eq .Values.data.antiAffinity "soft" }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            podAffinityTerm:
+              topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels:
+                  component: {{ template "fullname" . }}
+                  role: data
+      {{- end }}
+      containers:
+      - name: {{ template "fullname" . }}-data
+        image: "{{ .Values.odfe.image.repository }}:{{ .Values.odfe.image.tag }}"
+        imagePullPolicy: {{ .Values.odfe.image.pullPolicy }}
+        env:
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: node.name
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: discovery.zen.ping.unicast.hosts
+          value: {{ template "fullname" . }}-discovery
+        {{- range $key, $value :=  .Values.odfe.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- range $key, $value :=  .Values.data.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        resources:
+{{ toYaml .Values.data.resources | indent 10 }}
+        ports:
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: 9300
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        volumeMounts:
+        - name: storage
+          mountPath: /data
+      volumes:
+        {{- if not .Values.odfe.stateful.enabled }}
+        - emptyDir:
+            medium: ""
+          name: "storage"
+        {{- end }}
+  {{- if .Values.odfe.stateful.enabled }}
+  updateStrategy:
+    type: OnDelete
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      storageClassName: {{ .Values.odfe.stateful.class }}
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.data.stateful.size }}
+  {{- end }}
