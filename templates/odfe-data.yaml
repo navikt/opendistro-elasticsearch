@@ -88,14 +88,21 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 10
         volumeMounts:
-        - name: storage
-          mountPath: /data
+          - mountPath: /data 
+            name: storage
+{{- if .Values.odfe.security_enabled }}
+{{ toYaml .Values.odfe.security.volumeMounts | indent 10 }}
+          - mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+            name: config
+            subPath: elasticsearch.yml
       volumes:
-        {{- if not .Values.odfe.stateful.enabled }}
-        - emptyDir:
-            medium: ""
-          name: "storage"
-        {{- end }}
+        - name: certs
+          secret:
+            secretName: {{ template "fullname" . }}-certs
+        - name: config
+          secret:
+            secretName: {{ template "fullname" . }}-config
+{{- end }}             
   {{- if .Values.odfe.stateful.enabled }}
   updateStrategy:
     type: OnDelete

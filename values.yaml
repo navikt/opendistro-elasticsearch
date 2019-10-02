@@ -1,12 +1,13 @@
 odfe:
   serviceType: ClusterIP
+  security_enabled: true
   env:
-    opendistro_security.disabled: "false"
     team: "teamname"
     cluster.name: "milkyway"
     http.compression: "true"
     odfe_profile: "dev"
     network.host: "0.0.0.0"
+    cluster.routing.allocation.disk.threshold_enabled: "false"
   image:
     repository: amazon/opendistro-for-elasticsearch
     tag: 1.2.0
@@ -14,7 +15,42 @@ odfe:
   stateful:
     enabled: true
     class: "rook-ceph-block"
-
+  security:
+    env:
+      opendistro_security.disabled: "false"
+      opendistro_security.allow_unsafe_democertificates: "false"
+      opendistro_security.allow_default_init_securityindex: "true"
+      opendistro_security.audit.type: internal_elasticsearch
+      opendistro_security.enable_snapshot_restore_privilege: "true"
+      opendistro_security.check_snapshot_restore_write_privileges: "true"
+      opendistro_security.audit.config.disabled_rest_categories: NONE
+      opendistro_security.audit.config.disabled_transport_categories: NONE
+      opendistro_security.ssl.transport.pemcert_filepath: node.pem
+      opendistro_security.ssl.transport.pemkey_filepath: node-key.pem
+      opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
+      opendistro_security.ssl.transport.enforce_hostname_verification: "false"
+      opendistro_security.ssl.http.enabled: "true"
+      opendistro_security.ssl.http.pemcert_filepath: node.pem
+      opendistro_security.ssl.http.pemkey_filepath: node-key.pem
+      opendistro_security.ssl.http.pemtrustedcas_filepath: root-ca.pem
+      opendistro_security.authcz.admin_dn: CN=NAV,OU=NAV,O=NAV,L=OSLO,ST=OSLO,C=NO
+      opendistro_security.nodes_dn: CN=NAV,OU=NAV,O=NAV,L=OSLO,ST=OSLO,C=NO
+    volumeMounts:
+      - name: certs
+        mountPath: "/usr/share/elasticsearch/config/node.pem"
+        subPath: node.pem
+      - name: certs
+        mountPath: "/usr/share/elasticsearch/config/node-key.pem"
+        subPath: node-key.pem
+      - name: certs
+        mountPath: "/usr/share/elasticsearch/config/root-ca.pem"
+        subPath: root-ca.pem
+      - name: certs
+        mountPath: "/usr/share/elasticsearch/config/admin.pem"
+        subPath: admin.pem
+      - name: certs
+        mountPath: "/usr/share/elasticsearch/config/admin-key.pem"
+        subPath: admin-key.pem
 master:
   replicas: 3
   antiAffinity: "soft"
@@ -66,7 +102,8 @@ kibana:
       cpu: 1000m
     requests:
       cpu: 100m
-  env:
-    SERVER_SSL_ENABLED: "false"
-    SERVER_SSL_KEY: /usr/share/kibana/config/odfe-node2.key
-    SERVER_SSL_CERTIFICATE: /usr/share/kibana/config/odfe-node2.pem
+  security:
+    env:
+      SERVER_SSL_ENABLED: "true"
+      SERVER_SSL_KEY: /usr/share/kibana/config/node.key
+      SERVER_SSL_CERTIFICATE: /usr/share/kibana/config/node.pem

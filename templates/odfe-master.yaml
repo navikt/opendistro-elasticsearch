@@ -70,11 +70,11 @@ spec:
               resource: limits.cpu
         - name: discovery.seed_hosts
           value: {{ template "fullname" . }}-discovery
-        {{- range $key, $value :=  .Values.odfe.env }}
+        {{- range $key, $value := .Values.odfe.env }}
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
-        {{- range $key, $value :=  .Values.master.env }}
+        {{- range $key, $value := .Values.master.env }}
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
@@ -89,14 +89,21 @@ spec:
             port: 9300
           initialDelaySeconds: 60
         volumeMounts:
-          - name: storage
-            mountPath: /data
+          - mountPath: /data 
+            name: storage
+{{- if .Values.odfe.security_enabled }}
+{{ toYaml .Values.odfe.security.volumeMounts | indent 10 }}
+          - mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+            name: config
+            subPath: elasticsearch.yml
       volumes:
-        {{- if not .Values.odfe.stateful.enabled }}
-        - emptyDir:
-            medium: ""
-          name: "storage"
-        {{- end }}
+        - name: certs
+          secret:
+            secretName: {{ template "fullname" . }}-certs
+        - name: config
+          secret:
+            secretName: {{ template "fullname" . }}-config
+{{- end }}                     
   {{- if .Values.odfe.stateful.enabled }}
   updateStrategy:
     type: OnDelete
