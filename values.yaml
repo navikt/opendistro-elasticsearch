@@ -21,18 +21,23 @@ odfe:
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/node.pem"
         subPath: node.pem
+        readOnly: true
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/node-key.pem"
         subPath: node-key.pem
+        readOnly: true
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/root-ca.pem"
         subPath: root-ca.pem
+        readOnly: true
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/admin.pem"
         subPath: admin.pem
+        readOnly: true
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/admin-key.pem"
         subPath: admin-key.pem
+        readOnly: true
 master:
   replicas: 3
   antiAffinity: "soft"
@@ -78,14 +83,13 @@ data:
 kibana:
   enabled: true
   replicas: 1
-  httpPort: 80
   resources:
     limits:
       cpu: 1000m
     requests:
       cpu: 100m
-  security:
-    env:
-      SERVER_SSL_ENABLED: "true"
-      SERVER_SSL_KEY: /usr/share/kibana/config/node.key
-      SERVER_SSL_CERTIFICATE: /usr/share/kibana/config/node.pem
+  env:
+    SERVER_SSL_ENABLED: "true"
+    SERVER_SSL_KEY: /usr/share/kibana/config/node-key.pem
+    SERVER_SSL_CERTIFICATE: /usr/share/kibana/config/node.pem
+    ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: /usr/share/kibana/config/root-ca.pem

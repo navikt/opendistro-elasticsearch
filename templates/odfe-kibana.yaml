@@ -48,14 +48,24 @@ spec:
         {{- end }}
         - name: ELASTICSEARCH_HOSTS
           value: https://{{ template "fullname" . }}:9200
-        {{- range $key, $value :=  .Values.kibana.env }}
-        - name: {{ $key }}
-          value: {{ $value | quote }}
-        {{- end }}
         resources:
 {{ toYaml .Values.kibana.resources | indent 12 }}
         ports:
         - containerPort: 5601
           name: kibana
           protocol: TCP
+        volumeMounts:
+        - mountPath: /usr/share/kibana/config/node.pem
+          name: certs
+          subPath: node.pem
+        - mountPath: /usr/share/kibana/config/node-key.pem
+          name: certs
+          subPath: node-key.pem
+        - mountPath: /usr/share/kibana/config/root-ca.pem
+          name: certs
+          subPath: root-ca.pem
+      volumes:
+      - name: certs
+        secret:
+          secretName: {{ template "fullname" . }}-certs
 {{- end }}
