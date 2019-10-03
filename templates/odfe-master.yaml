@@ -89,7 +89,7 @@ spec:
             port: 9300
           initialDelaySeconds: 60
         volumeMounts:
-          - mountPath: /data 
+          - mountPath: /usr/share/elasticsearch/data 
             name: storage
 {{- if .Values.odfe.security.enabled }}
 {{ toYaml .Values.odfe.security.volumeMounts | indent 10 }}
