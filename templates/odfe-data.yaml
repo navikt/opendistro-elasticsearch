@@ -90,7 +90,7 @@ spec:
         volumeMounts:
           - mountPath: /data 
             name: storage
-{{- if .Values.odfe.security_enabled }}
+{{- if .Values.odfe.security.enabled }}
 {{ toYaml .Values.odfe.security.volumeMounts | indent 10 }}
           - mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
             name: config

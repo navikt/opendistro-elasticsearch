@@ -88,7 +88,7 @@ spec:
           tcpSocket:
             port: 9300
           initialDelaySeconds: 20
-{{- if .Values.odfe.security_enabled }}
+{{- if .Values.odfe.security.enabled }}
         volumeMounts:
 {{ toYaml .Values.odfe.security.volumeMounts | indent 10 }}
           - mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
