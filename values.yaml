@@ -38,6 +38,12 @@ odfe:
         mountPath: "/usr/share/elasticsearch/config/admin-key.pem"
         subPath: admin-key.pem
         readOnly: true
+      - name: config
+        mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+        subPath: elasticsearch.yml
+      - name: config 
+        mountPath: /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/internal_users.yml
+        subPath: internal_users.yml
 master:
   replicas: 3
   antiAffinity: "soft"

@@ -93,9 +93,6 @@ spec:
             name: storage
 {{- if .Values.odfe.security.enabled }}
 {{ toYaml .Values.odfe.security.volumeMounts | indent 10 }}
-          - mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
-            name: config
-            subPath: elasticsearch.yml
       volumes:
         - name: certs
           secret:
