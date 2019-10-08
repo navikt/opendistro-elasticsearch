@@ -3,8 +3,8 @@
 SCRIPTPATH=$(dirname $(realpath -s $0)) 
 echo $SCRIPTPATH
 cd $SCRIPTPATH/..
-mkdir -p .certs
-cd .certs
+mkdir -p .secrets
+cd .secrets
 
 echo "Generating root CA"
 openssl genrsa -out root-ca-key.pem 2048
