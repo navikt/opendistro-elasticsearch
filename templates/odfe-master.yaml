@@ -91,7 +91,7 @@ spec:
         volumeMounts:
           - mountPath: /usr/share/elasticsearch/data 
             name: storage
-{{- if .Values.odfe.security.enabled }}
+{{- if .Values.odfe.security.enabled -}}
 {{ toYaml .Values.odfe.security.volumeMounts | indent 10 }}
       volumes:
         - name: certs
@@ -100,7 +100,7 @@ spec:
         - name: config
           secret:
             secretName: {{ template "fullname" . }}-config
-{{- end }}                     
+{{- end -}}                     
   {{- if .Values.odfe.stateful.enabled }}
   updateStrategy:
     type: OnDelete

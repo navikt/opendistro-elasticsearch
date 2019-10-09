@@ -7,6 +7,7 @@ odfe:
     odfe_profile: "dev"
     network.host: "0.0.0.0"
     cluster.routing.allocation.disk.threshold_enabled: "false"
+    opendistro_security.disabled: "true"
   image:
     repository: amazon/opendistro-for-elasticsearch
     tag: 1.2.0
@@ -15,8 +16,8 @@ odfe:
     enabled: true
     class: "rook-ceph-block"
   security:
-    enabled: true
-    generate_secrets: true
+    enabled: false
+    generate_secrets: false
     volumeMounts:
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/node.pem"
@@ -94,8 +95,3 @@ kibana:
       cpu: 1000m
     requests:
       cpu: 100m
-  env:
-    SERVER_SSL_ENABLED: "true"
-    SERVER_SSL_KEY: /usr/share/kibana/config/node-key.pem
-    SERVER_SSL_CERTIFICATE: /usr/share/kibana/config/node.pem
-    ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES: /usr/share/kibana/config/root-ca.pem

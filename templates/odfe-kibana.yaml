@@ -46,14 +46,28 @@ spec:
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
+{{- if .Values.odfe.security.enabled }}
+        - name: SERVER_SSL_ENABLED
+          value: "true"
+        - name: SERVER_SSL_KEY
+          value: "/usr/share/kibana/config/node-key.pem"
+        - name: SERVER_SSL_CERTIFICATE
+          value: "/usr/share/kibana/config/node-key.pem"
+        - name: ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES
+          value: "/usr/share/kibana/config/root-ca.pem"
         - name: ELASTICSEARCH_HOSTS
           value: https://{{ template "fullname" . }}:9200
+{{- else }}
+        - name: ELASTICSEARCH_HOSTS
+          value: http://{{ template "fullname" . }}:9200
+{{- end }}   
         resources:
 {{ toYaml .Values.kibana.resources | indent 12 }}
         ports:
         - containerPort: 5601
           name: kibana
           protocol: TCP
+{{- if .Values.odfe.security.enabled }}
         volumeMounts:
         - mountPath: /usr/share/kibana/config/node.pem
           name: certs
@@ -68,4 +82,5 @@ spec:
       - name: certs
         secret:
           secretName: {{ template "fullname" . }}-certs
+{{- end }}
 {{- end }}
