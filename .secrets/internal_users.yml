@@ -1,0 +1,54 @@
+---
+# This is the internal user database
+# The hash value is a bcrypt hash and can be generated with plugin/tools/hash.sh
+
+_meta:
+  type: "internalusers"
+  config_version: 2
+
+# Define your internal users here
+
+admin:
+  hash: "changeme"
+  reserved: true
+  backend_roles:
+  - "admin"
+  description: "admin user"
+
+kibanaserver:
+  hash: "changeme"
+  reserved: true
+  description: "kibanaserver user"
+
+kibanaro:
+  hash: "changeme"
+  reserved: false
+  backend_roles:
+  - "kibanauser"
+  - "readall"
+  attributes:
+    attribute1: "value1"
+    attribute2: "value2"
+    attribute3: "value3"
+  description: "kibanaro user"
+
+logstash:
+  hash: "changeme"
+  reserved: false
+  backend_roles:
+  - "logstash"
+  description: "logstash user"
+
+readall:
+  hash: "changeme"
+  reserved: false
+  backend_roles:
+  - "readall"
+  description: "readall user"
+
+snapshotrestore:
+  hash: "changeme"
+  reserved: false
+  backend_roles:
+  - "snapshotrestore"
+  description: "snapshotrestore user"
