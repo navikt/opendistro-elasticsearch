@@ -18,8 +18,8 @@ spec:
     role: kibana
     team: {{ .Values.odfe.env.team  }}
   ports:
-  - name: https
-    port: 443
+  - name: http
+    port: 5601
     targetPort: 5601
     protocol: TCP
 {{- end }}

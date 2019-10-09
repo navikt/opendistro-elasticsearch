@@ -1,0 +1,23 @@
+{{ if not .Values.odfe.security.enabled }}
+{{ if .Values.kibana.enabled }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "fullname" . }}-kibana-files
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    component: {{ template "fullname" . }}
+    team: {{ .Values.odfe.env.team  }}
+    role: kibana 
+type: Opaque
+stringData:
+  kibana: |- 
+{{ .Files.Get "scripts/kibana" | indent 4 }}
+  kibana.yml: |-
+{{ .Files.Get ".secrets/kibana.yml" | indent 4 }}
+{{ end }}  
+{{ end }}
+

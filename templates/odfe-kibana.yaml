@@ -67,8 +67,8 @@ spec:
         - containerPort: 5601
           name: kibana
           protocol: TCP
-{{- if .Values.odfe.security.enabled }}
         volumeMounts:
+{{- if .Values.odfe.security.enabled }}
         - mountPath: /usr/share/kibana/config/node.pem
           name: certs
           subPath: node.pem
@@ -82,5 +82,17 @@ spec:
       - name: certs
         secret:
           secretName: {{ template "fullname" . }}-certs
+{{- else }}
+        - mountPath: /usr/share/kibana/bin/kibana
+          name: files
+          subPath: kibana
+        - mountPath: /usr/share/kibana/config/kibana.yml
+          name: files
+          subPath: kibana.yml
+      volumes:
+      - name: files
+        secret:
+          secretName: {{ template "fullname" . }}-kibana-files  
+          defaultMode: 0777        
 {{- end }}
 {{- end }}
