@@ -17,7 +17,7 @@ stringData:
   kibana: |- 
 {{ .Files.Get "scripts/kibana" | indent 4 }}
   kibana.yml: |-
-{{ .Files.Get ".secrets/kibana.yml" | indent 4 }}
+{{ .Files.Get "config/kibana.yml" | indent 4 }}
 {{ end }}  
 {{ end }}
 
