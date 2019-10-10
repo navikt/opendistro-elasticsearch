@@ -1,18 +1,19 @@
 # opendistro-elasticsearch
-Helm chart for Open Distro For Elasticsearch (odfe). 
+Helm chart for Open Distro For Elasticsearch (ODFE), the community-driven, 100% open source distribution of Elasticsearch with advanced security, alerting, deep performance analysis, and more. ODFE is supported by Amazon Web Services. 
 
-Default this chart will deploy an elasticsearch cluster consist of:
+## Installing the chart
 
-* 3 masters 
-* 3 data
-* 2 ingests
-* 1 kibana 
+Prerequisites:
+* A kubernetes cluster
+* Rook/ceph
+* Helm
+* openssl (for generating keys)
 
-Everything can be configured in the values.yml file. 
+### TL;DR
+```
+helm package 
+helm install opendistro-elasticsearch
+```
 Security is disabled by default, but can be enabled by setting the flag odfe.security.enabled:true. 
 
-## Installing the chart in localhost
-You will need to install:
-* Kubernetes cluster (minikube, or kubeadm)
-* Helm
 

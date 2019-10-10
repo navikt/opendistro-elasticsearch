@@ -3,6 +3,7 @@
 .gitignore
 .helmignore
 .travis.yml
+.*
 *.swp
 *.bak
 *.tmp
