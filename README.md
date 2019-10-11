@@ -19,7 +19,8 @@ Set the limits with following command:
 
 Install with:
 ```
-> helm package opendistro-elasticsearch
+> cd opendistro-elasticsearch
+> helm package .
 > helm install -n stilling opendistro-elasticsearch-0.1.tgz
 ```
 
@@ -111,10 +112,10 @@ subject=CN=NODE,OU=NAVIKT,O=NAV,L=OSLO,ST=OSLO,C=NO
 ```
 
 You need to type in the DN three times, the first is for generating the root key, second is for the admin key and last the node key.
-NOTE, admin and node key must have **different** DNs. All keys are saved under .secrets/ folder. Apply all keys as secrets to kubernetes
+NOTE, admin and node key must have **different** DNs. All keys are saved under .secrets/ folder. Apply the secrets to kubernetes
 using following command:
 
 ```
-
+> helm template  -n stilling -x templates/odfe-cert-secrets.example . | kubectl apply -f -
 ```
 

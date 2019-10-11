@@ -4,6 +4,7 @@
 .helmignore
 .travis.yml
 .example
+.secrets
 *.swp
 *.bak
 *.tmp
