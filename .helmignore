@@ -3,7 +3,7 @@
 .gitignore
 .helmignore
 .travis.yml
-.example
+*.example
 .secrets
 *.swp
 *.bak
