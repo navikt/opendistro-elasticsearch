@@ -30,6 +30,10 @@ spec:
         image: {{ .Values.odfe.image.repository }}-kibana:{{ .Values.odfe.image.tag }}
         imagePullPolicy: {{ .Values.odfe.image.pullPolicy }}
         env:
+{{ if not .Values.odfe.security.enabled}}  
+        - name: opendistro_security.disabled
+          value: "true"
+ {{ end }} 
         - name: NAMESPACE
           valueFrom:
             fieldRef:

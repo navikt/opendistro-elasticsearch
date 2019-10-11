@@ -117,15 +117,31 @@ NOTE, admin and node key must have **different** DNs. All keys are saved under .
 Apply the secrets to kubernetes using following command:
 
 ```
-> helm template  -n stilling --set odfe.generate_secrets=true -x templates/odfe-cert-secrets.example . | kubectl apply -f -
+> helm template  -n stilling --set odfe.generate_secrets=true -x templates/odfe-cert-secrets.yaml . | kubectl apply -f -
 ```
 
 ### Internal users
+ODFE has many ways of doing authentication and authorization, it supports LDAP, Kerberos, SAML, OpenID and [more](https://opendistro.github.io/for-elasticsearch-docs/docs/security-configuration/). The easiest is basic authentication with a list of internal users. The example below shows how to generate the users with belonging password. NOTE by convenient all users is set to the same password on startup, you can change this by logging into
+kibana and change the password [there](https://aws.amazon.com/blogs/opensource/change-passwords-open-distro-for-elasticsearch/). 
 
 ```
-docker run amazon/opendistro-for-elasticsearch sh /usr/share/elasticsearch/plugins/opendistro_security/tools/hash.sh -p <password>
+> docker run amazon/opendistro-for-elasticsearch sh /usr/share/elasticsearch/plugins/opendistro_security/tools/hash.sh -p <password>
 ```
 
+The hash script will encrypt the password into a hash, copy and paste this to the next script like shown below
+
 ```
-helm template -n stilling --set odfe.generate_secrets=true --set odfe.security.password.hash='hashbetweensinglequote' -x templates/odfe-config-secrets.yaml . | kubectl apply -f -
-``
+>helm template -n stilling --set odfe.generate_secrets=true --set odfe.security.password.hash='hashbetweensinglequote' -x templates/odfe-config-secrets.yaml . | kubectl apply -f -
+
+> k get secret
+NAME                                       TYPE                                  DATA   AGE
+default-token-p7nfn                        kubernetes.io/service-account-token   3      15d
+stilling-opendistro-elasticsearch-certs    Opaque                                5      15m
+stilling-opendistro-elasticsearch-config   Opaque                                2      14m
+```
+
+Finally deploy with security enabled:
+
+```
+helm install -n stilling --set odfe.security.enabled=true .
+```

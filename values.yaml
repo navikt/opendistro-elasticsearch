@@ -4,10 +4,8 @@ odfe:
     team: "teamname"
     cluster.name: "milkyway"
     http.compression: "true"
-    odfe_profile: "dev"
     network.host: "0.0.0.0"
     cluster.routing.allocation.disk.threshold_enabled: "false"
-    opendistro_security.disabled: "true"
   image:
     repository: amazon/opendistro-for-elasticsearch
     tag: 1.2.0

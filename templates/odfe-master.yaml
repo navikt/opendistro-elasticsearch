@@ -54,6 +54,10 @@ spec:
         image: "{{ .Values.odfe.image.repository }}:{{ .Values.odfe.image.tag }}"
         imagePullPolicy: {{ .Values.odfe.image.pullPolicy }}
         env:
+{{ if not .Values.odfe.security.enabled}}  
+        - name: opendistro_security.disabled
+          value: "true"
+ {{ end }} 
         - name: node.name
           valueFrom:
             fieldRef:
@@ -91,7 +95,7 @@ spec:
         volumeMounts:
           - mountPath: /usr/share/elasticsearch/data 
             name: storage
-{{- if .Values.odfe.security.enabled -}}
+{{- if .Values.odfe.security.enabled }}
 {{ toYaml .Values.odfe.security.volumeMounts | indent 10 }}
       volumes:
         - name: certs
