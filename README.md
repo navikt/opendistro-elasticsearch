@@ -14,18 +14,18 @@ Prerequisites:
 Elasticsearch uses a mmapfs directory to store indices. It wont start if it detects low mmap counts.
 Set the limits with following command:
 ```
-# sudo sysctl -w vm.max_map_count=262144
+> sudo sysctl -w vm.max_map_count=262144
 ```
 
 Install with:
 ```
-# helm package opendistro-elasticsearch
-# helm install -n stilling opendistro-elasticsearch-0.1.tgz
+> helm package opendistro-elasticsearch
+> helm install -n stilling opendistro-elasticsearch-0.1.tgz
 ```
 
 All pods should be in running state, by default it will deploy an elasticsearch cluster consist of:
 ```
-# kubectl get pods
+> kubectl get pods
 NAME                                                      READY   STATUS    RESTARTS   AGE
 stilling-opendistro-elasticsearch-data-0                    1/1     Running   0          23h
 stilling-opendistro-elasticsearch-data-1                    1/1     Running   0          23h
@@ -40,12 +40,12 @@ stilling-opendistro-elasticsearch-master-2                  1/1     Running   0 
 
 You can check the health of the cluster with this
 ```
-# kubectl get service
+> kubectl get service
 stilling-opendistro-elasticsearch             ClusterIP   10.102.125.108   <none>        9200/TCP,9300/TCP,9600/TCP   23h
 stilling-opendistro-elasticsearch-discovery   ClusterIP   None             <none>        9200/TCP,9300/TCP            23h
 stilling-opendistro-elasticsearch-kibana      ClusterIP   10.96.76.33      <none>        5601/TCP                     23h
 
-# curl http://10.102.125.108:9200/_cluster/health
+> curl http://10.102.125.108:9200/_cluster/health
 
 {
   "cluster_name": "milkyway",
@@ -75,3 +75,46 @@ Depending on traffic load and index size, you definitly need to increase the mem
 
 Security is disabled, but can be enabled by setting the flag **odfe.security.enabled:true**, this requires you to generate keys and certificats,
 If you don't need signed certificats by a third party CA, you can use the script generate_certs.sh to generate self signed certs.
+When generating keys, you will be asked to type in certs DN, this has to be changed in the config accordingly. 
+
+For instance:
+
+```
+> ./scripts/generate_certs.sh
+...
+Country Name (2 letter code) [AU]:NO
+State or Province Name (full name) [Some-State]:OSLO
+Locality Name (eg, city) []:OSLO
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:NAV
+Organizational Unit Name (eg, section) []:NAVIKT
+Common Name (e.g. server FQDN or YOUR name) []:ADMIN
+...
+
+--------------------------------------------------------------
+Remember to add this to opendistro_security.authcz.admin_dn:
+subject=CN=ADMIN,OU=NAVIKT,O=NAV,L=OSLO,ST=OSLO,C=NO
+--------------------------------------------------------------
+...
+Country Name (2 letter code) [AU]:NO
+State or Province Name (full name) [Some-State]:OSLO
+Locality Name (eg, city) []:OSLO
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:NAV
+Organizational Unit Name (eg, section) []:NAVIKT
+Common Name (e.g. server FQDN or YOUR name) []:NODE
+Email Address []:
+...
+--------------------------------------------------------------
+Remember to add this to opendistro_security.nodes_dn:
+subject=CN=NODE,OU=NAVIKT,O=NAV,L=OSLO,ST=OSLO,C=NO
+--------------------------------------------------------------
+
+```
+
+You need to type in the DN three times, the first is for generating the root key, second is for the admin key and last the node key.
+NOTE, admin and node key must have **different** DNs. All keys are saved under .secrets/ folder. Apply all keys as secrets to kubernetes
+using following command:
+
+```
+
+```
+
