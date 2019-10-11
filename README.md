@@ -117,7 +117,7 @@ NOTE, admin and node key must have **different** DNs. All keys are saved under .
 Apply the secrets to kubernetes using following command:
 
 ```
-> helm template  -n stilling -x templates/odfe-cert-secrets.example . | kubectl apply -f -
+> helm template  -n stilling --set odfe.generate_secrets=true -x templates/odfe-cert-secrets.example . | kubectl apply -f -
 ```
 
 ### Internal users
@@ -127,5 +127,5 @@ docker run amazon/opendistro-for-elasticsearch sh /usr/share/elasticsearch/plugi
 ```
 
 ```
-helm template -n pamsok --set odfe.security.password.hash=puthashhere -x templates/odfe-config-secrets.example . | kubectl apply -f -
+helm template -n stilling --set odfe.generate_secrets=true --set odfe.security.password.hash='hashbetweensinglequote' -x templates/odfe-config-secrets.yaml . | kubectl apply -f -
 ``
