@@ -17,6 +17,8 @@ odfe:
     class: "rook-ceph-block"
   security:
     enabled: false
+    password:
+      hash: "changeme"
     volumeMounts:
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/node.pem"

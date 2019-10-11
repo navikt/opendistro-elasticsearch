@@ -112,10 +112,20 @@ subject=CN=NODE,OU=NAVIKT,O=NAV,L=OSLO,ST=OSLO,C=NO
 ```
 
 You need to type in the DN three times, the first is for generating the root key, second is for the admin key and last the node key.
-NOTE, admin and node key must have **different** DNs. All keys are saved under .secrets/ folder. Apply the secrets to kubernetes
-using following command:
+NOTE, admin and node key must have **different** DNs. All keys are saved under .secrets/ folder. 
+
+Apply the secrets to kubernetes using following command:
 
 ```
 > helm template  -n stilling -x templates/odfe-cert-secrets.example . | kubectl apply -f -
 ```
 
+### Internal users
+
+```
+docker run amazon/opendistro-for-elasticsearch sh /usr/share/elasticsearch/plugins/opendistro_security/tools/hash.sh -p <password>
+```
+
+```
+helm template -n pamsok --set odfe.security.password.hash=puthashhere -x templates/odfe-config-secrets.example . | kubectl apply -f -
+``
