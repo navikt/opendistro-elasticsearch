@@ -20,8 +20,7 @@ Set the limits with following command:
 Install with:
 ```
 > cd opendistro-elasticsearch
-> helm package .
-> helm install -n stilling opendistro-elasticsearch-0.1.tgz
+> helm install -n stilling .
 ```
 
 All pods should be in running state, by default it will deploy an elasticsearch cluster consist of:
@@ -74,9 +73,9 @@ Depending on traffic load and index size, you definitly need to increase the mem
 
 ### Security
 
-Security is disabled, but can be enabled by setting the flag **odfe.security.enabled:true**, this requires you to generate keys and certificats,
-If you don't need signed certificats by a third party CA, you can use the script generate_certs.sh to generate self signed certs.
-When generating keys, you will be asked to type in certs DN, this has to be changed in the config accordingly. 
+Security is disabled by default, but can be enabled by setting the flag **odfe.security.enabled:true**, this requires you to generate keys and certificats,
+You can use the script generate_certs.sh to generate self signed certs.
+When generating keys, you will be asked to type in certs DN, this has to be changed in the config accordingly.
 
 For instance:
 
@@ -111,7 +110,7 @@ subject=CN=NODE,OU=NAVIKT,O=NAV,L=OSLO,ST=OSLO,C=NO
 
 ```
 
-You need to type in the DN three times, the first is for generating the root key, second is for the admin key and last the node key.
+Type in the DN three times, the first is for generating the root key, second is for the admin key and last the node key.
 NOTE, admin and node key must have **different** DNs. All keys are saved under .secrets/ folder. 
 
 Apply the secrets to kubernetes using following command:
@@ -142,7 +141,7 @@ stilling-opendistro-elasticsearch-config   Opaque                               
 
 If kibana is enabled, generate secrets for it aswell:
 ```
-helm template -n stilling --set odfe.generate_secrets=true --set odfe.kibana.password='thepasswordinplaintext' -x templates/odfe-02-kibana-secrets.yaml . | kubectl apply -f -
+helm template -n stilling --set odfe.generate_secrets=true --set kibana.password='thesamepasswordbutinplaintext' -x templates/odfe-02-kibana-secrets.yaml . | kubectl apply -f -
 ``` 
 
 Finally deploy with security enabled:
