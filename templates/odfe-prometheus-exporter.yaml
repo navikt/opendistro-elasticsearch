@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-prometheus-exporter
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    component: {{ template "fullname" . }}
+    team: {{ .Values.odfe.env.team  }}
+    role: prometheus-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: prometheus-exporter
+      component: {{ template "fullname" . }}
+      team: {{ .Values.odfe.env.team  }}
+  template:
+    metadata:
+      labels:
+        role: prometheus-exporter
+        component: {{ template "fullname" . }}
+        team: {{ .Values.odfe.env.team  }}
+    spec:
+      containers:
+      - command:
+        - /bin/elasticsearch_exporter
+        - -es.uri=http://{{ template "fullname" . }}:9200
+        - -es.all=true
+        image: justwatch/elasticsearch_exporter:1.1.0
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 9114
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+        name: prometheus-exporter
+        ports:
+        - containerPort: 9114
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 9114
+          initialDelaySeconds: 10
+          timeoutSeconds: 10
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 25m
+            memory: 64Mi

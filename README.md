@@ -149,3 +149,7 @@ Finally deploy with security enabled:
 ```
 helm install -n stilling --set odfe.security.enabled=true .
 ```
+
+## Acknowledgements
+* This helm chart is based on the work by [Pires](https://github.com/pires/kubernetes-elasticsearch-cluster)
+  
