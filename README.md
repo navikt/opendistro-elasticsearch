@@ -140,6 +140,11 @@ stilling-opendistro-elasticsearch-certs    Opaque                               
 stilling-opendistro-elasticsearch-config   Opaque                                2      14m
 ```
 
+If kibana is enabled, generate secrets for it aswell:
+```
+helm template -n stilling --set odfe.generate_secrets=true --set odfe.kibana.password='thepasswordinplaintext' -x templates/odfe-02-kibana-secrets.yaml . | kubectl apply -f -
+``` 
+
 Finally deploy with security enabled:
 
 ```

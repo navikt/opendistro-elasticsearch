@@ -56,7 +56,7 @@ spec:
         - name: SERVER_SSL_KEY
           value: "/usr/share/kibana/config/node-key.pem"
         - name: SERVER_SSL_CERTIFICATE
-          value: "/usr/share/kibana/config/node-key.pem"
+          value: "/usr/share/kibana/config/node.pem"
         - name: ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES
           value: "/usr/share/kibana/config/root-ca.pem"
         - name: ELASTICSEARCH_HOSTS
@@ -82,10 +82,16 @@ spec:
         - mountPath: /usr/share/kibana/config/root-ca.pem
           name: certs
           subPath: root-ca.pem
+        - mountPath: /usr/share/kibana/config/kibana.yml
+          name: config
+          subPath: kibana.yml
       volumes:
       - name: certs
         secret:
           secretName: {{ template "fullname" . }}-certs
+      - name: config
+        secret:
+          secretName: {{ template "fullname" . }}-kibana-secrets
 {{- else }}
         - mountPath: /usr/share/kibana/bin/kibana
           name: files
