@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: http
+    prometheus.io/scrape: "true"
+  name: {{ template "fullname" . }}-prometheus-exporter
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    component: {{ template "fullname" . }}
+    team: {{ .Values.odfe.env.team  }}
+    role: prometheus-exporter
+spec:
+  type: {{ .Values.odfe.serviceType }}
+  selector:
+    component: {{ template "fullname" . }}
+    role: prometheus-exporter
+    team: {{ .Values.odfe.env.team  }}
+  ports:
+  - name: http
+    port: 9114
+    protocol: TCP

@@ -151,5 +151,5 @@ helm install -n stilling --set odfe.security.enabled=true .
 ```
 
 ## Acknowledgements
-* This helm chart is based on the work by [Pires](https://github.com/pires/kubernetes-elasticsearch-cluster)
-  
+* This helm chart is based on the work of [Pires](https://github.com/pires/kubernetes-elasticsearch-cluster)
+* Elasticsearch prometheus exporter by [justwatch](https://github.com/justwatchcom/elasticsearch_exporter) 

@@ -27,14 +27,19 @@ spec:
       containers:
       - command:
         - /bin/elasticsearch_exporter
-        - -es.uri=http://{{ template "fullname" . }}:9200
-        - -es.all=true
+        - --es.uri=http://{{ template "fullname" . }}:9200
+        - --es.all
+        - --es.cluster_settings
+        - --es.indices
+        - --es.indices_settings
+        - --es.shards
+        - --es.snapshots
         image: justwatch/elasticsearch_exporter:1.1.0
         livenessProbe:
           httpGet:
             path: /health
             port: 9114
-          initialDelaySeconds: 30
+          initialDelaySeconds: 45
           timeoutSeconds: 10
         name: prometheus-exporter
         ports:
