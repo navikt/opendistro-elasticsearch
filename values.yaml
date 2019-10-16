@@ -16,7 +16,7 @@ odfe:
   security:
     enabled: false
     password:
-      hash: "changeme"
+      hash: "changeme" #placeholder
     volumeMounts:
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/node.pem"
@@ -53,6 +53,240 @@ odfe:
       - name: config 
         mountPath: /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/roles_mapping.yml
         subPath: roles_mapping.yml
+    config:
+      elasticsearch_yml:
+        opendistro_security.disabled: "false"
+        opendistro_security.allow_unsafe_democertificates: "false"
+        opendistro_security.allow_default_init_securityindex: "true"
+        opendistro_security.audit.type: internal_elasticsearch
+        opendistro_security.enable_snapshot_restore_privilege: "true"
+        opendistro_security.check_snapshot_restore_write_privileges: "true"
+        opendistro_security.audit.config.disabled_rest_categories: NONE
+        opendistro_security.audit.config.disabled_transport_categories: NONE
+        opendistro_security.ssl.transport.pemcert_filepath: node.pem
+        opendistro_security.ssl.transport.pemkey_filepath: node-key.pem
+        opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
+        opendistro_security.ssl.transport.enforce_hostname_verification: "false"
+        opendistro_security.ssl.http.enabled: "true"
+        opendistro_security.ssl.http.pemcert_filepath: node.pem
+        opendistro_security.ssl.http.pemkey_filepath: node-key.pem
+        opendistro_security.ssl.http.pemtrustedcas_filepath: root-ca.pem
+        opendistro_security.authcz.admin_dn: 
+          - "CN=ADMIN,O=NAV,L=OSLO,ST=OSLO,C=NO"
+        opendistro_security.nodes_dn: 
+          - "CN=NODE,O=NAV,L=OSLO,ST=OSLO,C=NO"
+        opendistro_security.restapi.roles_enabled: ["all_access", "security_rest_api_access"]
+      roles_yml:
+        _meta:
+          type: "roles"
+          config_version: 2
+        kibana_read_only:
+          reserved: true
+        security_rest_api_access:
+          reserved: true
+        alerting_view_alerts:
+          reserved: true
+          index_permissions:
+            - index_patterns:
+                - ".opendistro-alerting-alert*"
+              allowed_actions:
+                - read 
+        alerting_crud_alerts:
+          reserved: true
+          index_permissions:
+            - index_patterns:
+                - ".opendistro-alerting-alert*"
+              allowed_actions:
+                - crud 
+        alerting_full_access:
+          reserved: true
+          index_permissions:
+            - index_patterns:
+                - ".opendistro-alerting-config"
+                - ".opendistro-alerting-alert*"
+              allowed_actions:
+                - crud 
+        monitor:
+          reserved: false
+          index_permissions:
+            - index_patterns:
+              - "*"
+              allowed_actions:
+              - "cluster_monitor"
+              - "indices_monitor"
+          cluster_permissions:
+            - "cluster:admin/repository/get"
+            - "cluster_monitor"
+            - "indices_monitor"
+      roles_mapping_yml:
+        _meta:
+          type: "rolesmapping"
+          config_version: 2
+        all_access:
+          reserved: false
+          backend_roles:
+          - "admin"
+          description: "Maps admin to all_access"
+        own_index:
+          reserved: false
+          users:
+          - "*"
+          description: "Allow full access to an index named like the username"
+        logstash:
+          reserved: false
+          backend_roles:
+          - "logstash"
+        kibana_user:
+          reserved: false
+          backend_roles:
+          - "kibanauser"
+          description: "Maps kibanauser to kibana_user"
+        readall:
+          reserved: false
+          backend_roles:
+          - "readall"
+        manage_snapshots:
+          reserved: false
+          backend_roles:
+          - "snapshotrestore"
+        kibana_server:
+          reserved: true
+          users:
+          - "kibanaserver"
+        monitor:
+          reserved: false
+          users:
+          - "monitor"
+          backend_roles:
+          - "monitor"
+      config_yml:
+        _meta:
+            type: "config"
+            config_version: 2
+        config:
+          dynamic:
+            http:
+              anonymous_auth_enabled: false
+              xff:
+                enabled: false
+                internalProxies: '192\.168\.0\.10|192\.168\.0\.11' 
+            authc:
+              jwt_auth_domain:
+                description: "Authenticate via Json Web Token"
+                http_enabled: false
+                transport_enabled: false
+                order: 0
+                http_authenticator:
+                  type: jwt
+                  challenge: false
+                  config:
+                    signing_key: "base64 encoded HMAC key or public RSA/ECDSA pem key"
+                    jwt_header: "Authorization"
+                    jwt_url_parameter: null
+                    roles_key: null
+                    subject_key: null
+                authentication_backend:
+                  type: noop
+              clientcert_auth_domain:
+                description: "Authenticate via SSL client certificates"
+                http_enabled: true
+                transport_enabled: true
+                order: 2
+                http_authenticator:
+                  type: clientcert
+                  config:
+                    username_attribute: cn 
+                  challenge: false
+                authentication_backend:
+                  type: noop
+              kerberos_auth_domain:
+                http_enabled: false
+                transport_enabled: false
+                order: 6
+                http_authenticator:
+                  type: kerberos
+                  challenge: true
+                  config:
+                    krb_debug: false
+                    strip_realm_from_principal: true
+                authentication_backend:
+                  type: noop
+              basic_internal_auth_domain:
+                description: "Authenticate via HTTP Basic against internal users database"
+                http_enabled: true
+                transport_enabled: true
+                order: 4
+                http_authenticator:
+                  type: basic
+                  challenge: true
+                authentication_backend:
+                  type: intern
+              proxy_auth_domain:
+                description: "Authenticate via proxy"
+                http_enabled: false
+                transport_enabled: false
+                order: 3
+                http_authenticator:
+                  type: proxy
+                  challenge: false
+                  config:
+                    user_header: "x-proxy-user"
+                    roles_header: "x-proxy-roles"
+                authentication_backend:
+                  type: noop
+              ldap:
+                description: "Authenticate via LDAP or Active Directory"
+                http_enabled: false
+                transport_enabled: false
+                order: 5
+                http_authenticator:
+                  type: basic
+                  challenge: false
+                authentication_backend:
+                  type: ldap
+                  config:
+                    enable_ssl: false
+                    enable_start_tls: false
+                    enable_ssl_client_auth: false
+                    verify_hostnames: true
+                    hosts:
+                    - localhost:8389
+                    bind_dn: null
+                    password: null
+                    userbase: 'ou=people,dc=example,dc=com'
+                    usersearch: '(sAMAccountName={0})'
+                    username_attribute: null
+            authz:
+              roles_from_myldap:
+                description: "Authorize via LDAP or Active Directory"
+                http_enabled: false
+                transport_enabled: false
+                authorization_backend:
+                  type: ldap
+                  config:
+                    enable_ssl: false
+                    enable_start_tls: false
+                    enable_ssl_client_auth: false
+                    verify_hostnames: true
+                    hosts:
+                    - localhost:8389
+                    bind_dn: null
+                    password: null
+                    rolebase: 'ou=groups,dc=example,dc=com'
+                    rolesearch: '(member={0})'
+                    userroleattribute: null
+                    userrolename: disabled
+                    rolename: cn
+                    resolve_nested_roles: true
+                    userbase: 'ou=people,dc=example,dc=com'
+                    usersearch: '(uid={0})'
+              roles_from_another_ldap:
+                description: "Authorize via another Active Directory"
+                http_enabled: false
+                transport_enabled: false
+                authorization_backend:
+                  type: ldap
+
 master:
   replicas: 3
   antiAffinity: "soft"
