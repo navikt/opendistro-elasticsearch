@@ -17,7 +17,7 @@ Set the limits with following command:
 > sudo sysctl -w vm.max_map_count=262144
 ```
 
-Install with:
+### Install with:
 ```
 > cd opendistro-elasticsearch
 > helm install -n stilling .
@@ -67,87 +67,32 @@ stilling-opendistro-elasticsearch-kibana      ClusterIP   10.96.76.33      <none
 ```
 
 ## Deploy to production:
-Before going to production, you should change settings in the values.yaml file, according to your need.
-Depending on traffic load and index size, you definitly need to increase the memory for data and master nodes.
+Before going to production, reconfigure the settings in the values.yaml file  according to your need.
+Depending on traffic load and index size, increase the memory for data and master nodes.
 [More about settings](https://www.elastic.co/guide/en/elasticsearch/guide/current/hardware.html#_memory)
 
-### Security
+## Security
 
-Security is disabled by default, but can be enabled by setting the flag **odfe.security.enabled:true**, this requires you to generate keys and certificats,
-You can use the script generate_certs.sh to generate self signed certs.
-When generating keys, you will be asked to type in certs DN, this has to be changed in the config accordingly.
+Security is disabled by default, but can be enabled by setting the flag **odfe.security.enabled=true**.
+ODFE supports a varity of authentication and authorization protocols like LDAP, Kerberos, SAML, OpenID and [more](https://opendistro.github.io/for-elasticsearch-docs/docs/security-configuration/). By default this installation creates a list of internal users with belonging password. NOTE by convenient all users is set to the same password on startup, you can change this by logging into kibana and change the password [there](https://aws.amazon.com/blogs/opensource/change-passwords-open-distro-for-elasticsearch/). 
 
-For instance:
 
+Use the script generate_certs.sh to generate self signed certs:
 ```
 > ./scripts/generate_certs.sh
-...
-Country Name (2 letter code) [AU]:NO
-State or Province Name (full name) [Some-State]:OSLO
-Locality Name (eg, city) []:OSLO
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:NAV
-Organizational Unit Name (eg, section) []:NAVIKT
-Common Name (e.g. server FQDN or YOUR name) []:ADMIN
-...
-
---------------------------------------------------------------
-Remember to add this to opendistro_security.authcz.admin_dn:
-subject=CN=ADMIN,OU=NAVIKT,O=NAV,L=OSLO,ST=OSLO,C=NO
---------------------------------------------------------------
-...
-Country Name (2 letter code) [AU]:NO
-State or Province Name (full name) [Some-State]:OSLO
-Locality Name (eg, city) []:OSLO
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:NAV
-Organizational Unit Name (eg, section) []:NAVIKT
-Common Name (e.g. server FQDN or YOUR name) []:NODE
-Email Address []:
-...
---------------------------------------------------------------
-Remember to add this to opendistro_security.nodes_dn:
-subject=CN=NODE,OU=NAVIKT,O=NAV,L=OSLO,ST=OSLO,C=NO
---------------------------------------------------------------
-
 ```
 
-Type in the DN three times, the first is for generating the root key, second is for the admin key and last the node key.
-NOTE, admin and node key must have **different** DNs. All keys are saved under .secrets/ folder. 
+All keys are saved under .secrets/ folder. 
 
 Apply the secrets to kubernetes using following command:
 
 ```
-> helm template  -n stilling --set odfe.generate_secrets=true -x templates/odfe-cert-secrets.yaml . | kubectl apply -f -
+> ./scripts/generate_kubernetes_secrets.sh <release_name> <password>
 ```
-
-### Internal users
-ODFE has many ways of doing authentication and authorization, it supports LDAP, Kerberos, SAML, OpenID and [more](https://opendistro.github.io/for-elasticsearch-docs/docs/security-configuration/). The easiest is basic authentication with a list of internal users. The example below shows how to generate the users with belonging password. NOTE by convenient all users is set to the same password on startup, you can change this by logging into
-kibana and change the password [there](https://aws.amazon.com/blogs/opensource/change-passwords-open-distro-for-elasticsearch/). 
+Both release_name and password has to be set, remember to change the passowrd later in kibana. Finally deploy with security enabled:
 
 ```
-> docker run amazon/opendistro-for-elasticsearch sh /usr/share/elasticsearch/plugins/opendistro_security/tools/hash.sh -p <password>
-```
-
-The hash script will encrypt the password into a hash, copy and paste this to the next script like shown below
-
-```
->helm template -n stilling --set odfe.generate_secrets=true --set odfe.security.password.hash='hashbetweensinglequote' -x templates/odfe-config-secrets.yaml . | kubectl apply -f -
-
-> k get secret
-NAME                                       TYPE                                  DATA   AGE
-default-token-p7nfn                        kubernetes.io/service-account-token   3      15d
-stilling-opendistro-elasticsearch-certs    Opaque                                5      15m
-stilling-opendistro-elasticsearch-config   Opaque                                2      14m
-```
-
-If kibana is enabled, generate secrets for it aswell:
-```
-helm template -n stilling --set odfe.generate_secrets=true --set kibana.password='thesamepasswordbutinplaintext' -x templates/odfe-02-kibana-secrets.yaml . | kubectl apply -f -
-``` 
-
-Finally deploy with security enabled:
-
-```
-helm install -n stilling --set odfe.security.enabled=true .
+helm install -n <release_name> --set odfe.security.enabled=true .
 ```
 
 ## Acknowledgements
