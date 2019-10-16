@@ -2,14 +2,13 @@
 _meta:
   type: "config"
   config_version: 2
-
 config:
   dynamic:
     http:
       anonymous_auth_enabled: false
       xff:
         enabled: false
-        internalProxies: '192\.168\.0\.10|192\.168\.0\.11' # regex pattern
+        internalProxies: '192\.168\.0\.10|192\.168\.0\.11' 
     authc:
       jwt_auth_domain:
         description: "Authenticate via Json Web Token"
@@ -83,26 +82,18 @@ config:
           type: basic
           challenge: false
         authentication_backend:
-          # LDAP authentication backend (authenticate users against a LDAP or Active Directory)
           type: ldap
           config:
-            # enable ldaps
             enable_ssl: false
-            # enable start tls, enable_ssl should be false
             enable_start_tls: false
-            # send client certificate
             enable_ssl_client_auth: false
-            # verify ldap hostname
             verify_hostnames: true
             hosts:
             - localhost:8389
             bind_dn: null
             password: null
             userbase: 'ou=people,dc=example,dc=com'
-            # Filter to search for users (currently in the whole subtree beneath userbase)
-            # {0} is substituted with the username
             usersearch: '(sAMAccountName={0})'
-            # Use this attribute from the user as username (if not set then DN is used)
             username_attribute: null
     authz:
       roles_from_myldap:

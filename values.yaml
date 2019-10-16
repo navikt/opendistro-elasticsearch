@@ -44,6 +44,15 @@ odfe:
       - name: config 
         mountPath: /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/internal_users.yml
         subPath: internal_users.yml
+      - name: config 
+        mountPath: /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/config.yml
+        subPath: config.yml
+      - name: config 
+        mountPath: /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/roles.yml
+        subPath: roles.yml
+      - name: config 
+        mountPath: /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/roles_mapping.yml
+        subPath: roles_mapping.yml
 master:
   replicas: 3
   antiAffinity: "soft"

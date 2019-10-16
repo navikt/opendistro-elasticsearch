@@ -7,8 +7,8 @@ mkdir -p .secrets
 cd .secrets
 
 echo "Generating root CA, keep this key private and safe"
-openssl genrsa -out root-ca-key.pem 2048 -subj "/C=NO/ST=OSLO/L=OSLO/O=NAV/CN=ADMIN"
-openssl req -new -x509 -sha256 -key root-ca-key.pem -out root-ca.pem
+openssl genrsa -out root-ca-key.pem 2048 
+openssl req -new -x509 -sha256 -key root-ca-key.pem -out root-ca.pem -subj "/C=NO/ST=OSLO/L=OSLO/O=NAV/CN=ROOT"
 
 echo "Generating admin cert"
 openssl genrsa -out admin-key-temp.pem 2048
@@ -32,16 +32,16 @@ echo "Remember to add this to opendistro_security.nodes_dn:"
 openssl x509 -subject -nameopt RFC2253 -noout -in node.pem
 echo "--------------------------------------------------------------"
 
-echo "Generating client cert"
-openssl genrsa -out client-key-temp.pem 2048
-openssl pkcs8 -inform PEM -outform PEM -in client-key-temp.pem -topk8 -nocrypt -v1 PBE-SHA1-3DES -out client-key.pem
-openssl req -new -key client-key.pem -out client.csr -subj "/C=NO/ST=OSLO/L=OSLO/O=NAV/CN=readall"
-openssl x509 -req -in client.csr -CA root-ca.pem -CAkey root-ca-key.pem -CAcreateserial -sha256 -out client.pem
+echo "Generating monitor cert"
+openssl genrsa -out monitor-key-temp.pem 2048
+openssl pkcs8 -inform PEM -outform PEM -in monitor-key-temp.pem -topk8 -nocrypt -v1 PBE-SHA1-3DES -out monitor-key.pem
+openssl req -new -key monitor-key.pem -out monitor.csr -subj "/C=NO/ST=OSLO/L=OSLO/O=NAV/CN=monitor"
+openssl x509 -req -in monitor.csr -CA root-ca.pem -CAkey root-ca-key.pem -CAcreateserial -sha256 -out monitor.pem
 
 # Cleanup
 rm admin-key-temp.pem
 rm admin.csr
 rm node-key-temp.pem
 rm node.csr
-rm client-key-temp.pem
-rm client.csr
+rm monitor-key-temp.pem
+rm monitor.csr

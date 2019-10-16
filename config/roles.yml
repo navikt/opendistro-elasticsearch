@@ -1,0 +1,40 @@
+_meta:
+  type: "roles"
+  config_version: 2
+kibana_read_only:
+  reserved: true
+security_rest_api_access:
+  reserved: true
+alerting_view_alerts:
+  reserved: true
+  index_permissions:
+    - index_patterns:
+        - ".opendistro-alerting-alert*"
+      allowed_actions:
+        - read 
+alerting_crud_alerts:
+  reserved: true
+  index_permissions:
+    - index_patterns:
+        - ".opendistro-alerting-alert*"
+      allowed_actions:
+        - crud 
+alerting_full_access:
+  reserved: true
+  index_permissions:
+    - index_patterns:
+        - ".opendistro-alerting-config"
+        - ".opendistro-alerting-alert*"
+      allowed_actions:
+        - crud 
+monitor:
+  reserved: false
+  index_permissions:
+    - index_patterns:
+      - "*"
+      allowed_actions:
+      - read
+  cluster_permissions:
+    - "read"
+    - "cluster_monitor"
+    - "indices_monitor"
