@@ -74,22 +74,21 @@ Depending on traffic load and index size, increase the memory for data and maste
 ## Security
 
 Security is disabled by default, but can be enabled by setting the flag **odfe.security.enabled=true**.
-ODFE supports a varity of authentication and authorization protocols like LDAP, Kerberos, SAML, OpenID and [more](https://opendistro.github.io/for-elasticsearch-docs/docs/security-configuration/). By default this installation creates a list of internal users with belonging password. NOTE by convenient all users is set to the same password on startup, you can change this by logging into kibana and change the password [there](https://aws.amazon.com/blogs/opensource/change-passwords-open-distro-for-elasticsearch/). 
-
+ODFE supports a varity of authentication and authorization protocols like LDAP, Kerberos, SAML, OpenID and [more](https://opendistro.github.io/for-elasticsearch-docs/docs/security-configuration/). By default this installation creates a list of internal users with passwords. NOTE by convenient all users is set to the same password on startup, you can change this by logging into kibana and change the password [there](https://aws.amazon.com/blogs/opensource/change-passwords-open-distro-for-elasticsearch/). 
 
 Use the script generate_certs.sh to generate self signed certs:
 ```
 > ./scripts/generate_certs.sh
 ```
 
-All keys are saved under .secrets/ folder. 
+The script creates all keys necessary needed for this setup, and are placed under .secrets/ folder. Keep root-ca-key.pem and root-ca.pem incase you need to add more keys and need to sign them.
 
 Apply the secrets to kubernetes using following command:
 
 ```
 > ./scripts/generate_kubernetes_secrets.sh <release_name> <password>
 ```
-Both release_name and password has to be set, remember to change the passowrd later in kibana. Finally deploy with security enabled:
+Both release_name and password has to be set, remember to change the password later in kibana. Finally deploy with security enabled:
 
 ```
 helm install -n <release_name> --set odfe.security.enabled=true .
