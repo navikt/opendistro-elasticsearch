@@ -8,7 +8,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
     component: {{ template "fullname" . }}
-    team: {{ .Values.odfe.env.team  }}
+    team: {{ .Values.odfe.env.TEAM }}
     role: prometheus-exporter
 spec:
   replicas: 1
@@ -16,13 +16,13 @@ spec:
     matchLabels:
       role: prometheus-exporter
       component: {{ template "fullname" . }}
-      team: {{ .Values.odfe.env.team  }}
+      team: {{ .Values.odfe.env.TEAM }}
   template:
     metadata:
       labels:
         role: prometheus-exporter
         component: {{ template "fullname" . }}
-        team: {{ .Values.odfe.env.team  }}
+        team: {{ .Values.odfe.env.TEAM }}
     spec:
       containers:
       - command:

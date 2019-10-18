@@ -9,7 +9,7 @@ metadata:
     heritage: "{{ .Release.Service }}"
     component: {{ template "fullname" . }}
     role: data
-    team: {{ .Values.odfe.env.team  }}
+    team: {{ .Values.odfe.env.TEAM }}
 spec:
   {{- if .Values.odfe.stateful.enabled }}
   serviceName: {{ template "fullname" . }}-data
@@ -20,13 +20,13 @@ spec:
     matchLabels:
       component: {{ template "fullname" . }}
       role: data
-      team: {{ .Values.odfe.env.team  }}
+      team: {{ .Values.odfe.env.TEAM }}
   template:
     metadata:
       labels:
         component: {{ template "fullname" . }}
         role: data
-        team: {{ .Values.odfe.env.team  }}
+        team: {{ .Values.odfe.env.TEAM }}
     spec:
       {{- if eq .Values.data.antiAffinity "hard" }}
       affinity:

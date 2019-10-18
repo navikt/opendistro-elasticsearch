@@ -9,7 +9,7 @@ metadata:
     heritage: "{{ .Release.Service }}"
     component: {{ template "fullname" . }}
     role: master
-    team: {{ .Values.odfe.env.team  }}
+    team: {{ .Values.odfe.env.TEAM  }}
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:

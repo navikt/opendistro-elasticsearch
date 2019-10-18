@@ -9,14 +9,14 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
     component: {{ template "fullname" . }}
-    team: {{ .Values.odfe.env.team  }}
+    team: {{ .Values.odfe.env.TEAM }}
     role: kibana
 spec:
   type: {{ .Values.odfe.serviceType }}
   selector:
     component: {{ template "fullname" . }}
     role: kibana
-    team: {{ .Values.odfe.env.team  }}
+    team: {{ .Values.odfe.env.TEAM }}
   ports:
   - name: http
     port: 5601

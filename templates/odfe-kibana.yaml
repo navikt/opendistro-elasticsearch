@@ -9,7 +9,7 @@ metadata:
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
     component: {{ template "fullname" . }}
-    team: {{ .Values.odfe.env.team  }}
+    team: {{ .Values.odfe.env.TEAM  }}
     role: kibana
 spec:
   replicas: {{ .Values.kibana.replicas }}
@@ -17,13 +17,13 @@ spec:
     matchLabels:
       component: {{ template "fullname" . }}
       role: kibana
-      team: {{ .Values.odfe.env.team  }}
+      team: {{ .Values.odfe.env.TEAM  }}
   template:
     metadata:
       labels:
         component: {{ template "fullname" . }}
         role: kibana
-        team: {{ .Values.odfe.env.team  }}
+        team: {{ .Values.odfe.env.TEAM  }}
     spec:
       containers:
       - name: {{ template "fullname" . }}-kibana

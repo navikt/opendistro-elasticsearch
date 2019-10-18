@@ -9,13 +9,13 @@ metadata:
     heritage: "{{ .Release.Service }}"
     component: {{ template "fullname" . }}
     role: ingest
-    team: {{ .Values.odfe.env.team  }}
+    team: {{ .Values.odfe.env.TEAM  }}
 spec:
   type: {{ .Values.odfe.serviceType }}
   selector:
     component: {{ template "fullname" . }}
     role: ingest
-    team: {{ .Values.odfe.env.team  }}
+    team: {{ .Values.odfe.env.TEAM  }}
   ports:
   - name: http
     port: 9200

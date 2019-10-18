@@ -9,20 +9,20 @@ metadata:
     heritage: "{{ .Release.Service }}"
     component: {{ template "fullname" . }}
     role: ingest
-    team: {{ .Values.odfe.env.team  }}
+    team: {{ .Values.odfe.env.TEAM }}
 spec:
   replicas: {{ .Values.ingest.replicas }}
   selector:
     matchLabels:
       component: {{ template "fullname" . }}
       role: ingest
-      team: {{ .Values.odfe.env.team  }}
+      team: {{ .Values.odfe.env.TEAM }}
   template:
     metadata:
       labels:
         component: {{ template "fullname" . }}
         role: ingest
-        team: {{ .Values.odfe.env.team  }}
+        team: {{ .Values.odfe.env.TEAM }}
     spec:
       {{- if eq .Values.ingest.antiAffinity "hard" }}
       affinity:
