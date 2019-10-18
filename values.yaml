@@ -16,7 +16,7 @@ odfe:
   security:
     enabled: false
     password:
-      hash: "changeme" #placeholder
+      hash: "changeme"
     volumeMounts:
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/node.pem"
