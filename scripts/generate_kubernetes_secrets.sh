@@ -10,4 +10,4 @@ HASH=$(docker run amazon/opendistro-for-elasticsearch sh /usr/share/elasticsearc
 echo "generate kubernetes secret for certificates"
 helm template -n stilling --set odfe.generate_secrets=true --set odfe.security.password.hash="$HASH" -x templates/odfe-config-secrets.yaml . | kubectl apply -f -
 echo "generating secret for kibana"
-helm template -n stilling --set odfe.generate_secrets=true --set kibana.password="$PASSWORD" -x templates/odfe-02-kibana-secrets.yaml . | kubectl apply -f -
+helm template -n stilling --set odfe.generate_secrets=true --set kibana.password="$PASSWORD" -x templates/odfe-kibana-secrets.yaml . | kubectl apply -f -
