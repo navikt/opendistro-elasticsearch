@@ -1,0 +1,23 @@
+{{- if and .Values.kibana.enabled .Values.ingress -}}
+{{- $serviceName := printf "%s-kibana" (include "fullname" .) -}}
+{{- $host := printf "%s.%s" $serviceName .Values.ingress.domain -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "fullname" . }}-kibana
+  labels:
+    app: {{ template "fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version}}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: {{ template "fullname" . }}
+    team: {{ .Values.odfe.env.TEAM }}
+spec:
+  rules:
+    - host: {{ $host }}
+      http:
+        paths:
+          - backend:
+              serviceName: {{ $serviceName }}
+              servicePort: 5601
+{{- end -}}
