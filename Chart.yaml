@@ -1,7 +1,7 @@
 apiVersion: v1
 name: opendistro-elasticsearch
 home: https://github.com/navikt/opendistro-elasticsearch
-version: 0.1
+version: 0.2
 description: Open Distro for Elasticsearch
 sources:
   - https://github.com/navikt/opendistro-elasticsearch
