@@ -1,0 +1,23 @@
+{{- if .Values.ingress -}}
+{{- $host := printf "%s-analyzer.%s" (include "fullname" .) .Values.ingress.domain -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "fullname" . }}-analyzer
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    component: {{ template "fullname" . }}
+    team: {{ .Values.odfe.env.TEAM }}
+spec:
+  rules:
+    - host: {{ $host }}
+      http:
+        paths:
+          - backend:
+              serviceName: {{ template "fullname" . }}
+              servicePort: 9600
+            path: /
+{{- end -}}
