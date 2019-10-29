@@ -86,7 +86,7 @@ The script creates all keys necessary needed for this setup, and are placed unde
 Apply the secrets to kubernetes using following command:
 
 ```
-> ./scripts/generate_kubernetes_secrets.sh <release_name> <password>
+> ./scripts/generate_kubernetes_secrets.sh <namespace> <release_name> <password>
 ```
 Both release_name and password has to be set, remember to change the password later in kibana. Finally deploy with security enabled:
 
