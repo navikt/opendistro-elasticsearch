@@ -1,5 +1,8 @@
 odfe:
   serviceType: ClusterIP
+  ssl:
+    http:
+      enabled: false
   env:
     TEAM: "teamname"
     cluster.name: "milkyway"
@@ -67,7 +70,6 @@ odfe:
         opendistro_security.ssl.transport.pemkey_filepath: node-key.pem
         opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
         opendistro_security.ssl.transport.enforce_hostname_verification: "false"
-        opendistro_security.ssl.http.enabled: "true"
         opendistro_security.ssl.http.pemcert_filepath: node.pem
         opendistro_security.ssl.http.pemkey_filepath: node-key.pem
         opendistro_security.ssl.http.pemtrustedcas_filepath: root-ca.pem
@@ -338,6 +340,10 @@ kibana:
       cpu: 1000m
     requests:
       cpu: 100m
-  
+
+exporter:
+  enabled: true
+  password: "changeme"
+
 ingress:
   domain: localhost

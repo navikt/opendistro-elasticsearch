@@ -34,16 +34,8 @@ echo "Remember to add this to opendistro_security.nodes_dn:"
 openssl x509 -subject -nameopt RFC2253 -noout -in node.pem
 echo "--------------------------------------------------------------"
 
-echo "Generating monitor cert"
-openssl genrsa -out monitor-key-temp.pem 2048
-openssl pkcs8 -inform PEM -outform PEM -in monitor-key-temp.pem -topk8 -nocrypt -v1 PBE-SHA1-3DES -out monitor-key.pem
-openssl req -new -key monitor-key.pem -out monitor.csr -subj "/C=NO/ST=OSLO/L=OSLO/O=NAV/CN=monitor"
-openssl x509 -req -in monitor.csr -CA root-ca.pem -CAkey root-ca-key.pem -CAcreateserial -sha256 -out monitor.pem -days 3650
-
 # Cleanup
 rm admin-key-temp.pem
 rm admin.csr
 rm node-key-temp.pem
 rm node.csr
-rm monitor-key-temp.pem
-rm monitor.csr

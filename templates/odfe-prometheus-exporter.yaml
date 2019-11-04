@@ -25,6 +25,12 @@ spec:
         team: {{ .Values.odfe.env.TEAM }}
     spec:
       containers:
+        env:
+          - name: ES_URI
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "fullname" . }}-exporter-secrets
+                key: ES_URI
       - command:
         - /bin/elasticsearch_exporter
         - --es.all
@@ -33,15 +39,6 @@ spec:
         - --es.indices_settings
         - --es.shards
         - --es.snapshots
-{{- if .Values.odfe.security.enabled }}
-        - --es.client-private-key=/usr/share/certs/monitor-key.pem
-        - --es.client-cert=/usr/share/certs/monitor.pem
-        - --es.ca=/usr/share/certs/root-ca.pem
-        - --es.uri=https://{{ template "fullname" . }}:9200
-        - --es.ssl-skip-verify
-{{- else }}
-        - --es.uri=http://{{ template "fullname" . }}:9200
-{{- end }} 
         image: justwatch/elasticsearch_exporter:1.1.0
         livenessProbe:
           httpGet:
@@ -52,22 +49,6 @@ spec:
         name: prometheus-exporter
         ports:
         - containerPort: 9114
-{{- if .Values.odfe.security.enabled }}
-        volumeMounts:
-        - mountPath: /usr/share/certs/monitor.pem
-          name: certs
-          subPath: monitor.pem
-        - mountPath: /usr/share/certs/monitor-key.pem
-          name: certs
-          subPath: monitor-key.pem
-        - mountPath: /usr/share/certs/root-ca.pem
-          name: certs
-          subPath: root-ca.pem
-      volumes:
-      - name: certs
-        secret:
-          secretName: {{ template "fullname" . }}-certs
-{{- end }}
         readinessProbe:
           httpGet:
             path: /health

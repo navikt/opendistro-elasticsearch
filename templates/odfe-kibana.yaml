@@ -30,7 +30,7 @@ spec:
         image: {{ .Values.odfe.image.repository }}-kibana:{{ .Values.odfe.image.tag }}
         imagePullPolicy: {{ .Values.odfe.image.pullPolicy }}
         env:
-{{ if not .Values.odfe.security.enabled}}  
+{{ if not .Values.odfe.security.enabled }}  
         - name: opendistro_security.disabled
           value: "true"
  {{ end }} 
@@ -50,7 +50,7 @@ spec:
         - name: {{ $key }}
           value: {{ $value | quote }}
         {{- end }}
-{{- if .Values.odfe.security.enabled }}
+{{- if .Values.odfe.ssl.http.enabled }}
         - name: SERVER_SSL_ENABLED
           value: "true"
         - name: SERVER_SSL_KEY

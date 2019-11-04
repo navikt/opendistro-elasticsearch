@@ -54,6 +54,10 @@ spec:
         - name: opendistro_security.disabled
           value: "true"
  {{ end }}
+ {{ if .Values.odfe.ssl.http.enabled }}  
+        - name: opendistro_security.ssl.http.enabled
+          value: "true"
+{{ end }}
         - name: NAMESPACE
           valueFrom:
             fieldRef:
