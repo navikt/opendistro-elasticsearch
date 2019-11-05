@@ -34,21 +34,25 @@ spec:
         - --es.shards
         - --es.snapshots
         image: justwatch/elasticsearch_exporter:1.1.0
+        name: prometheus-exporter
+        env:
+          - name: ES_URI
+{{- if .Values.odfe.security.enabled }}
+            valueFrom:
+              secretKeyRef: 
+                name: {{ template "fullname" . }}-exporter-secrets
+                key: ES_URI
+{{- else }}
+            value: http://{{ template "fullname" . }}:9200
+{{- end }}
+        ports:
+        - containerPort: 9114
         livenessProbe:
           httpGet:
             path: /health
             port: 9114
           initialDelaySeconds: 45
-          timeoutSeconds: 10
-        name: prometheus-exporter
-        env:
-          - name: ES_URI
-            valueFrom:
-              secretKeyRef: 
-                name: {{ template "fullname" . }}-exporter-secrets
-                key: ES_URI
-        ports:
-        - containerPort: 9114
+          timeoutSeconds: 10        
         readinessProbe:
           httpGet:
             path: /health
