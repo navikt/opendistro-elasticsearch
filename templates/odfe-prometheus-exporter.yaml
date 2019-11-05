@@ -25,12 +25,6 @@ spec:
         team: {{ .Values.odfe.env.TEAM }}
     spec:
       containers:
-        env:
-          - name: ES_URI
-            valueFrom:
-              secretKeyRef:
-                name: {{ template "fullname" . }}-exporter-secrets
-                key: ES_URI
       - command:
         - /bin/elasticsearch_exporter
         - --es.all
@@ -47,6 +41,12 @@ spec:
           initialDelaySeconds: 45
           timeoutSeconds: 10
         name: prometheus-exporter
+        env:
+          - name: ES_URI
+            valueFrom:
+              secretKeyRef: 
+                name: {{ template "fullname" . }}-exporter-secrets
+                key: ES_URI
         ports:
         - containerPort: 9114
         readinessProbe:
