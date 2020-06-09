@@ -1,0 +1,61 @@
+odfe:
+  stateful:
+    enabled: true
+    class: "hostpath"
+
+master:
+  replicas: 3
+  antiAffinity: "soft"
+  resources:
+    requests:
+      memory: 128Mi
+  env:
+    ES_JAVA_OPTS: "-Xms128m -Xmx128m"
+    node.master: true
+    node.data: false
+    node.ingest: false
+  stateful:
+    size: 1Gi
+
+ingest:
+  replicas: 2
+  antiAffinity: "soft"
+  resources:
+    requests:
+      memory: 128Mi
+  env:
+    ES_JAVA_OPTS: "-Xms128m -Xmx128m"
+    node.master: false
+    node.data: false
+    node.ingest: true
+
+data:
+  replicas: 3
+  antiAffinity: "soft"
+  resources:
+    requests:
+      memory: 128Mi
+  env:
+    ES_JAVA_OPTS: "-Xms128m -Xmx128m"
+    node.master: false
+    node.data: true
+    node.ingest: false
+  stateful:
+    size: 4Gi
+
+kibana:
+  enabled: true
+  password: "changeme"
+  replicas: 1
+  resources:
+    limits:
+      cpu: 1000m
+    requests:
+      cpu: 100m
+
+exporter:
+  enabled: true
+  password: "changeme"
+
+ingress:
+  domain: localhost
