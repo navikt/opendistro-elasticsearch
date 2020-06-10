@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: {{ if .Values.odfe.stateful.enabled }}StatefulSet{{ else }}Deployment{{ end }}
+kind: StatefulSet
 metadata:
   name: {{ template "fullname" . }}-data
   labels:
@@ -11,9 +11,7 @@ metadata:
     role: data
     team: {{ .Values.odfe.env.TEAM }}
 spec:
-  {{- if .Values.odfe.stateful.enabled }}
   serviceName: {{ template "fullname" . }}-data
-  {{- end }}
   replicas: {{ .Values.data.replicas }}
   podManagementPolicy: Parallel
   selector:
@@ -54,11 +52,11 @@ spec:
         image: "{{ .Values.odfe.image.repository }}:{{ .Values.odfe.image.tag }}"
         imagePullPolicy: {{ .Values.odfe.image.pullPolicy }}
         env:
-{{ if not .Values.odfe.security.enabled }}  
+{{ if not .Values.odfe.security.enabled }}
         - name: opendistro_security.disabled
           value: "true"
 {{ end }}
-{{ if .Values.odfe.ssl.http.enabled }}  
+{{ if .Values.odfe.ssl.http.enabled }}
         - name: opendistro_security.ssl.http.enabled
           value: "true"
 {{ end }}
@@ -96,7 +94,7 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 10
         volumeMounts:
-          - mountPath: /usr/share/elasticsearch/data 
+          - mountPath: /usr/share/elasticsearch/data
             name: storage
 {{- if .Values.odfe.security.enabled }}
 {{ toYaml .Values.odfe.security.volumeMounts | indent 10 }}
@@ -107,8 +105,7 @@ spec:
         - name: config
           secret:
             secretName: {{ template "fullname" . }}-config
-{{- end }}             
-  {{- if .Values.odfe.stateful.enabled }}
+{{- end }}
   updateStrategy:
     type: OnDelete
   volumeClaimTemplates:
@@ -120,4 +117,3 @@ spec:
       resources:
         requests:
           storage: {{ .Values.data.stateful.size }}
-  {{- end }}
