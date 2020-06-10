@@ -14,7 +14,6 @@ odfe:
     tag: 1.2.0
     pullPolicy: Always
   stateful:
-    enabled: true
     class: "rook-ceph-block"
   security:
     enabled: false
@@ -44,16 +43,16 @@ odfe:
       - name: config
         mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
         subPath: elasticsearch.yml
-      - name: config 
+      - name: config
         mountPath: /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/internal_users.yml
         subPath: internal_users.yml
-      - name: config 
+      - name: config
         mountPath: /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/config.yml
         subPath: config.yml
-      - name: config 
+      - name: config
         mountPath: /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/roles.yml
         subPath: roles.yml
-      - name: config 
+      - name: config
         mountPath: /usr/share/elasticsearch/plugins/opendistro_security/securityconfig/roles_mapping.yml
         subPath: roles_mapping.yml
     config:
@@ -73,9 +72,9 @@ odfe:
         opendistro_security.ssl.http.pemcert_filepath: node.pem
         opendistro_security.ssl.http.pemkey_filepath: node-key.pem
         opendistro_security.ssl.http.pemtrustedcas_filepath: root-ca.pem
-        opendistro_security.authcz.admin_dn: 
+        opendistro_security.authcz.admin_dn:
           - "CN=ADMIN,O=NAV,L=OSLO,ST=OSLO,C=NO"
-        opendistro_security.nodes_dn: 
+        opendistro_security.nodes_dn:
           - "CN=NODE,O=NAV,L=OSLO,ST=OSLO,C=NO"
         opendistro_security.restapi.roles_enabled: ["all_access", "security_rest_api_access"]
       roles_yml:
@@ -92,14 +91,14 @@ odfe:
             - index_patterns:
                 - ".opendistro-alerting-alert*"
               allowed_actions:
-                - read 
+                - read
         alerting_crud_alerts:
           reserved: true
           index_permissions:
             - index_patterns:
                 - ".opendistro-alerting-alert*"
               allowed_actions:
-                - crud 
+                - crud
         alerting_full_access:
           reserved: true
           index_permissions:
@@ -107,7 +106,7 @@ odfe:
                 - ".opendistro-alerting-config"
                 - ".opendistro-alerting-alert*"
               allowed_actions:
-                - crud 
+                - crud
         monitor:
           reserved: false
           index_permissions:
@@ -171,7 +170,7 @@ odfe:
               anonymous_auth_enabled: false
               xff:
                 enabled: false
-                internalProxies: '192\.168\.0\.10|192\.168\.0\.11' 
+                internalProxies: '192\.168\.0\.10|192\.168\.0\.11'
             authc:
               jwt_auth_domain:
                 description: "Authenticate via Json Web Token"
@@ -197,7 +196,7 @@ odfe:
                 http_authenticator:
                   type: clientcert
                   config:
-                    username_attribute: cn 
+                    username_attribute: cn
                   challenge: false
                 authentication_backend:
                   type: noop

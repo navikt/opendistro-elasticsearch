@@ -1,6 +1,5 @@
 odfe:
   stateful:
-    enabled: true
     class: "hostpath"
 
 master:
