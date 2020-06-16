@@ -2,7 +2,7 @@ odfe:
   serviceType: ClusterIP
   ssl:
     http:
-      enabled: false
+      enabled: true
   env:
     TEAM: "teamname"
     cluster.name: "milkyway"
@@ -16,7 +16,7 @@ odfe:
   stateful:
     class: "rook-ceph-block"
   security:
-    enabled: false
+    enabled: true
     password:
       hash: "changeme"
     volumeMounts:
@@ -39,6 +39,14 @@ odfe:
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/admin-key.pem"
         subPath: admin-key.pem
+        readOnly: true
+      - name: certs
+        mountPath: "/usr/share/elasticsearch/config/monitor.pem"
+        subPath: monitor.pem
+        readOnly: true
+      - name: certs
+        mountPath: "/usr/share/elasticsearch/config/monitor-key.pem"
+        subPath: monitor-key.pem
         readOnly: true
       - name: config
         mountPath: /usr/share/elasticsearch/config/elasticsearch.yml

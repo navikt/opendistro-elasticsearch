@@ -1,6 +1,6 @@
 odfe:
   stateful:
-    class: "hostpath"
+    class: "standard"
   security:
     enabled: true
 
@@ -59,4 +59,4 @@ exporter:
   password: "changeme"
 
 ingress:
-  domain: localhost
+  domain: dev-gcp.nais.io

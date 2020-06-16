@@ -33,18 +33,15 @@ spec:
         - --es.indices_settings
         - --es.shards
         - --es.snapshots
+        - --es.ca=/usr/share/elasticsearch/config/root-ca.pem
+        - --es.client-private-key=/usr/share/elasticsearch/config/monitor-key.pem
+        - --es.client-cert=/usr/share/elasticsearch/config/monitor.pem
+        - --es.ssl-skip-verify
         image: justwatch/elasticsearch_exporter:1.1.0
         name: prometheus-exporter
         env:
           - name: ES_URI
-{{- if .Values.odfe.security.enabled }}
-            valueFrom:
-              secretKeyRef: 
-                name: {{ template "fullname" . }}-exporter-secrets
-                key: ES_URI
-{{- else }}
-            value: http://{{ template "fullname" . }}:9200
-{{- end }}
+            value: https://{{ template "fullname" . }}:9200
         ports:
         - containerPort: 9114
         livenessProbe:
@@ -52,7 +49,7 @@ spec:
             path: /health
             port: 9114
           initialDelaySeconds: 45
-          timeoutSeconds: 10        
+          timeoutSeconds: 10
         readinessProbe:
           httpGet:
             path: /health
@@ -66,3 +63,14 @@ spec:
           requests:
             cpu: 25m
             memory: 64Mi
+{{ if .Values.odfe.security.enabled }}
+        volumeMounts:
+{{ toYaml .Values.odfe.security.volumeMounts | indent 10 }}
+      volumes:
+        - name: certs
+          secret:
+            secretName: {{ template "fullname" . }}-certs
+        - name: config
+          secret:
+            secretName: {{ template "fullname" . }}-config
+{{- end }}
