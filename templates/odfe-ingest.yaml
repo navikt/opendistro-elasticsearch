@@ -19,11 +19,18 @@ spec:
       team: {{ .Values.odfe.env.TEAM }}
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "{{ .Values.odfe.istio.inject }}"
+        traffic.sidecar.istio.io/includeInboundPorts: "*"
+        traffic.sidecar.istio.io/excludeOutboundPorts: "9300"
+        traffic.sidecar.istio.io/excludeInboundPorts: "9300"
       labels:
         component: {{ template "fullname" . }}
         role: ingest
         team: {{ .Values.odfe.env.TEAM }}
+        app: {{ template "fullname" . }}
     spec:
+      serviceAccountName: {{ template "fullname" . }}
       {{- if eq .Values.ingest.antiAffinity "hard" }}
       affinity:
         podAntiAffinity:
@@ -50,11 +57,11 @@ spec:
         image: "{{ .Values.odfe.image.repository }}:{{ .Values.odfe.image.tag }}"
         imagePullPolicy: {{ .Values.odfe.image.pullPolicy }}
         env:
-{{ if not .Values.odfe.security.enabled}}  
+{{ if not .Values.odfe.security.enabled}}
         - name: opendistro_security.disabled
           value: "true"
  {{ end }}
- {{ if .Values.odfe.ssl.http.enabled }}  
+ {{ if .Values.odfe.ssl.http.enabled }}
         - name: opendistro_security.ssl.http.enabled
           value: "true"
 {{ end }}
@@ -106,4 +113,4 @@ spec:
         - name: config
           secret:
             secretName: {{ template "fullname" . }}-config
-{{- end }}         
+{{- end }}

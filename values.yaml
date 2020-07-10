@@ -2,16 +2,18 @@ odfe:
   serviceType: ClusterIP
   ssl:
     http:
-      enabled: true
+      enabled: false
   env:
     TEAM: "teamname"
     cluster.name: "milkyway"
     http.compression: "true"
     network.host: "0.0.0.0"
     cluster.routing.allocation.disk.threshold_enabled: "false"
+  istio:
+    inject: "false"
   image:
     repository: amazon/opendistro-for-elasticsearch
-    tag: 1.2.0
+    tag: 1.8.0
     pullPolicy: Always
   stateful:
     class: "rook-ceph-block"

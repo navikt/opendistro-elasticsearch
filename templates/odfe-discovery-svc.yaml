@@ -13,7 +13,6 @@ metadata:
   annotations:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
-  clusterIP: None
   publishNotReadyAddresses: true
   selector:
     component: {{ template "fullname" . }}

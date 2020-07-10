@@ -10,5 +10,3 @@
 .project
 .idea/
 *.tmproj
-.secrets
-gcp

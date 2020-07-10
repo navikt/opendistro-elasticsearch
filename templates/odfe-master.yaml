@@ -11,7 +11,7 @@ metadata:
     role: master
     team: {{ .Values.odfe.env.TEAM  }}
 spec:
-  serviceName: {{ template "fullname" . }}-master
+  serviceName: {{ template "fullname" . }}-discovery
   replicas: {{ .Values.master.replicas }}
   podManagementPolicy: Parallel
   selector:
@@ -21,11 +21,25 @@ spec:
       team: {{ .Values.odfe.env.TEAM  }}
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "{{ .Values.odfe.istio.inject }}"
+        traffic.sidecar.istio.io/includeInboundPorts: "*"
+        traffic.sidecar.istio.io/excludeOutboundPorts: "9300"
+        traffic.sidecar.istio.io/excludeInboundPorts: "9300"
       labels:
         component: {{ template "fullname" . }}
         role: master
         team: {{ .Values.odfe.env.TEAM  }}
+        app: {{ template "fullname" . }}
     spec:
+      serviceAccountName: {{ template "fullname" . }}
+      initContainers:
+        - name: init-mount
+          command: [ 'sh', '-c', 'chown -R 1000:1000 /usr/share/elasticsearch/data' ]
+          image: busybox:1.27.2
+          volumeMounts:
+            - mountPath: /usr/share/elasticsearch/data
+              name: storage
       {{- if eq .Values.master.antiAffinity "hard" }}
       affinity:
         podAntiAffinity:

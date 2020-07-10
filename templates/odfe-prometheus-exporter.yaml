@@ -19,11 +19,18 @@ spec:
       team: {{ .Values.odfe.env.TEAM }}
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "{{ .Values.odfe.istio.inject }}"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "9114"
+        prometheus.io/scrape: "true"
       labels:
         role: prometheus-exporter
         component: {{ template "fullname" . }}
         team: {{ .Values.odfe.env.TEAM }}
+        app: {{ template "fullname" . }}
     spec:
+      serviceAccountName: {{ template "fullname" . }}
       containers:
       - command:
         - /bin/elasticsearch_exporter
@@ -33,15 +40,24 @@ spec:
         - --es.indices_settings
         - --es.shards
         - --es.snapshots
+{{- if .Values.odfe.ssl.http.enabled }}
         - --es.ca=/usr/share/elasticsearch/config/root-ca.pem
         - --es.client-private-key=/usr/share/elasticsearch/config/monitor-key.pem
         - --es.client-cert=/usr/share/elasticsearch/config/monitor.pem
         - --es.ssl-skip-verify
+{{- end }}
+        env:
+        - name: ES_URI
+{{- if .Values.odfe.ssl.http.enabled }}
+          value: https://{{ template "fullname" . }}:9200
+{{- else }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "fullname" . }}-exporter-secrets
+              key: ES_URI
+{{- end }}
         image: justwatch/elasticsearch_exporter:1.1.0
         name: prometheus-exporter
-        env:
-          - name: ES_URI
-            value: https://{{ template "fullname" . }}:9200
         ports:
         - containerPort: 9114
         livenessProbe:
