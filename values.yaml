@@ -14,7 +14,7 @@ odfe:
     enabled: false
   image:
     repository: amazon/opendistro-for-elasticsearch
-    tag: 1.8.0
+    tag: 1.9.0
     pullPolicy: Always
   stateful:
     class: "rook-ceph-block"
