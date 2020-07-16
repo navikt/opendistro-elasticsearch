@@ -8,6 +8,7 @@ odfe:
     TEAM: "teampam"
     cluster.name: "stilling"
   istio:
+    enabled: true
     inject: "true"
   security:
     enabled: true
@@ -103,3 +104,6 @@ kibana:
     ES_JAVA_OPTS: "-Xmx1024m"
 
 ingress:
+
+virtualservice:
+  domain: dev.adeo.no

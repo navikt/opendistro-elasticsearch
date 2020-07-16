@@ -11,6 +11,7 @@ odfe:
     cluster.routing.allocation.disk.threshold_enabled: "false"
   istio:
     inject: "false"
+    enabled: false
   image:
     repository: amazon/opendistro-for-elasticsearch
     tag: 1.8.0

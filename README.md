@@ -7,7 +7,7 @@ Helm chart for Open Distro For Elasticsearch (ODFE), the community-driven, 100% 
 Prerequisites:
 * A kubernetes cluster
 * Rook/ceph 
-* Helm
+* Helm 3.x
 * openssl (for generating keys)
 
 ### Virtual memory
@@ -17,10 +17,15 @@ Set the limits with following command:
 > sudo sysctl -w vm.max_map_count=262144
 ```
 
+### Test templates:
+```
+> helm lint
+> helm template stilling . --debug
+```
 ### Install with:
 ```
 > cd opendistro-elasticsearch
-> helm install -n stilling .
+> helm upgrade --install -n stilling .
 ```
 
 All pods should be in running state, by default it will deploy an elasticsearch cluster consist of:

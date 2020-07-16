@@ -1,4 +1,4 @@
-{{ if .Values.odfe.istio.inject }}
+{{ if .Values.odfe.istio.enabled }}
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:

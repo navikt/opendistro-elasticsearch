@@ -1,4 +1,4 @@
-{{ if .Values.odfe.istio.inject }}
+{{ if and .Values.odfe.istio.enabled .Values.virtualservice }}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
@@ -8,9 +8,9 @@ metadata:
     team: {{ .Values.odfe.env.TEAM }}
 spec:
   gateways:
-  - istio-system/ingress-gateway-dev-nav-no
+  - istio-system/ingress-gateway-dev-adeo-no
   hosts:
-  - {{ template "fullname" . }}-kibana.dev-nav.no
+  - {{ template "fullname" . }}-kibana.{{ .Values.virtualservice.domain }}
   http:
   - route:
     - destination:

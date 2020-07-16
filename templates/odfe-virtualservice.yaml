@@ -1,16 +1,16 @@
-{{ if .Values.odfe.istio.inject }}
+{{ if and .Values.odfe.istio.enabled .Values.virtualservice }}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: {{ template "fullname" . }}-devnav
+  name: {{ template "fullname" . }}
   labels:
     app: {{ template "fullname" . }}
     team: {{ .Values.odfe.env.TEAM }}
 spec:
   gateways:
-  - istio-system/ingress-gateway-dev-nav-no
+  - istio-system/ingress-gateway-dev-adeo-no
   hosts:
-  - {{ template "fullname" . }}.dev-nav.no
+  - {{ template "fullname" . }}.{{ .Values.virtualservice.domain }}
   http:
   - route:
     - destination:
