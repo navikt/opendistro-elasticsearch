@@ -1,4 +1,4 @@
-{{ if .Values.odfe.istio.enabled }}
+{{ if not .Values.odfe.istio.inject }}
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
