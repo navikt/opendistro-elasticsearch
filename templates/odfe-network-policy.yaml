@@ -41,6 +41,12 @@ spec:
             name: istio-system
         podSelector:
           matchLabels:
+            istio: istiod
+      - namespaceSelector:
+          matchLabels:
+            name: istio-system
+        podSelector:
+          matchLabels:
             istio: pilot
       - namespaceSelector:
           matchLabels:

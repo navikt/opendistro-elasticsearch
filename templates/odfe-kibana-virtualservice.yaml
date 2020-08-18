@@ -8,7 +8,7 @@ metadata:
     team: {{ .Values.odfe.env.TEAM }}
 spec:
   gateways:
-  - istio-system/ingress-gateway-dev-adeo-no
+  - istio-system/ingress-gateway-adeo-no
   hosts:
   - {{ template "fullname" . }}-kibana.{{ .Values.virtualservice.domain }}
   http:
