@@ -8,7 +8,7 @@ metadata:
     team: {{ .Values.odfe.env.TEAM }}
 spec:
   gateways:
-  - istio-system/ingress-gateway-adeo-no
+  - istio-system/{{ .Values.virtualservice.gateway }}
   hosts:
   - {{ template "fullname" . }}-kibana.{{ .Values.virtualservice.domain }}
   http:
@@ -17,6 +17,5 @@ spec:
         host: {{ template "fullname" . }}-kibana
         port:
           number: 5601
-        subset: ""
       weight: 100
 {{ end }}

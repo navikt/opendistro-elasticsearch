@@ -106,4 +106,5 @@ kibana:
 ingress:
 
 virtualservice:
+  gateway: ingress-gateway-devadeo-no
   domain: dev.adeo.no
