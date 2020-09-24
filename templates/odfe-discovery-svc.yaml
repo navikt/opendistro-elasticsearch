@@ -18,8 +18,8 @@ spec:
     component: {{ template "fullname" . }}
     role: master
   ports:
-  - name: http
+  - name: http-rest
     port: 9200
-  - name: transport
+  - name: tcp-transport
     port: 9300
     protocol: TCP

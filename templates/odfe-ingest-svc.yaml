@@ -17,12 +17,14 @@ spec:
     role: ingest
     team: {{ .Values.odfe.env.TEAM  }}
   ports:
-  - name: http
+  - name: http-rest
     port: 9200
     protocol: TCP
-  - name: transport
+  - name: tcp-transport
     port: 9300
     protocol: TCP
-  - name: metrics
+  - name: tcp-metrics
     port: 9600
+
+
 
