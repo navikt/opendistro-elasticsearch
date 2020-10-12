@@ -19,6 +19,18 @@ spec:
     - from:
         - source:
             principals:
+              - cluster.local/ns/istio-system/sa/prometheus
+      to:
+        - operation:
+            methods:
+              - GET
+            paths:
+              - /metrics
+            ports:
+              - "9114"
+    - from:
+        - source:
+            principals:
               - cluster.local/ns/{{ .Values.odfe.env.TEAM }}/sa/pam-internal-search-api
       to:
         - operation:
