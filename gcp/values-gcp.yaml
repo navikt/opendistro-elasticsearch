@@ -106,5 +106,6 @@ kibana:
 ingress:
 
 virtualservice:
+  serviceaccount: gw-dev-intern-nav-no-service-account
   gateway: ingress-gateway-devadeo-no
-  domain: dev.adeo.no
+  domain: dev.intern.nav.no

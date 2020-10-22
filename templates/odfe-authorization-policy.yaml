@@ -11,6 +11,7 @@ spec:
     - from:
         - source:
             principals:
+              - cluster.local/ns/istio-system/sa/{{ .Values.virtualservice.serviceaccount }}
               - cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account
       to:
         - operation:
