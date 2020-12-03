@@ -74,8 +74,8 @@ odfe:
         opendistro_security.audit.type: internal_elasticsearch
         opendistro_security.enable_snapshot_restore_privilege: "true"
         opendistro_security.check_snapshot_restore_write_privileges: "true"
-        opendistro_security.audit.config.disabled_rest_categories: NONE
-        opendistro_security.audit.config.disabled_transport_categories: NONE
+        opendistro_security.audit.config.disabled_rest_categories: AUTHENTICATED, GRANTED_PRIVILEGES
+        opendistro_security.audit.config.disabled_transport_categories: AUTHENTICATED, GRANTED_PRIVILEGES
         opendistro_security.ssl.transport.pemcert_filepath: node.pem
         opendistro_security.ssl.transport.pemkey_filepath: node-key.pem
         opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem
