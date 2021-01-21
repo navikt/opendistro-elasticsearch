@@ -1,0 +1,83 @@
+{{ if .Values.odfe.istio.enabled }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    team: {{ .Values.odfe.env.TEAM }}
+spec:
+  rules:
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/istio-system/sa/{{ .Values.virtualservice.serviceaccount }}
+              - cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account
+      to:
+        - operation:
+            paths:
+              - '*'
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/istio-system/sa/prometheus
+      to:
+        - operation:
+            methods:
+              - GET
+            paths:
+              - /metrics
+            ports:
+              - "9114"
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/{{ .Values.odfe.env.TEAM }}/sa/pam-internal-search-api
+      to:
+        - operation:
+            paths:
+              - '*'
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/{{ .Values.odfe.env.TEAM }}/sa/pam-index
+      to:
+        - operation:
+            paths:
+              - '*'
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/{{ .Values.odfe.env.TEAM }}/sa/pam-er-sync
+      to:
+        - operation:
+            paths:
+              - '*'
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/{{ .Values.odfe.env.TEAM }}/sa/pam-search-api
+      to:
+        - operation:
+            paths:
+              - '*'
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/{{ .Values.odfe.env.TEAM }}/sa/pam-internalad-indexer
+      to:
+        - operation:
+            paths:
+              - '*'
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/{{ .Values.odfe.env.TEAM }}/sa/{{ template "fullname" . }}
+      to:
+        - operation:
+            paths:
+              - '*'
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
+{{ end }}

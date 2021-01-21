@@ -1,0 +1,20 @@
+{{ if .Values.odfe.istio.enabled }}
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: {{ template "fullname" . }}-kibana
+  labels:
+    app: {{ template "fullname" . }}
+    team: {{ .Values.odfe.env.TEAM }}
+spec:
+  exportTo:
+    - "."
+  hosts:
+    - hooks.slack.com
+  location: MESH_EXTERNAL
+  ports:
+    - name: https
+      number: 443
+      protocol: HTTPS
+  resolution: DNS
+{{ end }}

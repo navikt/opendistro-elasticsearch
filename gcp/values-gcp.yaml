@@ -1,62 +1,111 @@
 odfe:
   stateful:
     class: "standard"
+  ssl:
+    http:
+      enabled: false
+  env:
+    TEAM: "teampam"
+    cluster.name: "stilling"
+  istio:
+    enabled: true
+    inject: "true"
   security:
     enabled: true
+    config:
+      roles_yml:
+        adindex:
+          reserved: false
+          index_permissions:
+            - index_patterns:
+                - "ad*"
+              allowed_actions:
+                - "indices_all"
+                - "manage_alias"
+          cluster_permissions:
+            - allowed_actions:
+                - "cluster_composite_ops_ro"
+                - "cluster_monitor"
+        searchapi:
+          reserved: false
+          index_permissions:
+            - index_patterns:
+                - "*"
+              allowed_actions:
+                - "read"
+          cluster_permissions:
+            - allowed_actions:
+                - "cluster_composite_ops_ro"
+                - "cluster_monitor"
+      roles_mapping_yml:
+        adindex:
+          reserved: false
+          users:
+            - "adindex"
+          backend_roles:
+            - "adindex"
+        searchapi:
+          reserved: false
+          users:
+            - "searchapi"
+          backend_roles:
+            - "searchapi"
 
 master:
   replicas: 3
-  antiAffinity: "soft"
   resources:
+    limits:
+      cpu: 2
+      memory: 2048Mi
     requests:
-      memory: 128Mi
-  env:
-    ES_JAVA_OPTS: "-Xms128m -Xmx128m"
-    node.master: true
-    node.data: false
-    node.ingest: false
+      cpu: 0.2
+      memory: 1152Mi
   stateful:
-    size: 1Gi
+    size: 4Gi
+  env:
+    ES_JAVA_OPTS: "-Xms1024m -Xmx1024m"
 
 ingest:
   replicas: 2
-  antiAffinity: "soft"
   resources:
+    limits:
+      cpu: 2
+      memory: 2048Mi
     requests:
-      memory: 128Mi
+      cpu: 0.2
+      memory: 1152Mi
   env:
-    ES_JAVA_OPTS: "-Xms128m -Xmx128m"
-    node.master: false
-    node.data: false
-    node.ingest: true
+    ES_JAVA_OPTS: "-Xms1024m -Xmx1024m"
 
 data:
   replicas: 3
   antiAffinity: "soft"
   resources:
+    limits:
+      cpu: 2
+      memory: 4096Mi
     requests:
-      memory: 128Mi
-  env:
-    ES_JAVA_OPTS: "-Xms128m -Xmx128m"
-    node.master: false
-    node.data: true
-    node.ingest: false
+      cpu: 0.2
+      memory: 2176Mi
   stateful:
-    size: 4Gi
+    size: 48Gi
+  env:
+    ES_JAVA_OPTS: "-Xms2048m -Xmx2048m"
 
 kibana:
-  enabled: true
-  password: "changeme"
   replicas: 1
   resources:
     limits:
       cpu: 1000m
+      memory: 2048Mi
     requests:
       cpu: 100m
-
-exporter:
-  enabled: true
-  password: "changeme"
+  env:
+    ES_JAVA_OPTS: "-Xmx1024m"
 
 ingress:
-  domain: dev-gcp.nais.io
+
+virtualservice:
+  serviceaccount: gw-dev-intern-nav-no-service-account
+  gateway: ingress-gateway-devadeo-no
+  domain: dev.intern.nav.no

@@ -20,20 +20,25 @@ spec:
       team: {{ .Values.odfe.env.TEAM  }}
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "{{ .Values.odfe.istio.inject }}"
+        traffic.sidecar.istio.io/includeInboundPorts: "*"
       labels:
         component: {{ template "fullname" . }}
         role: kibana
         team: {{ .Values.odfe.env.TEAM  }}
+        app: {{ template "fullname" . }}
     spec:
+      serviceAccountName: {{ template "fullname" . }}
       containers:
       - name: {{ template "fullname" . }}-kibana
         image: {{ .Values.odfe.image.repository }}-kibana:{{ .Values.odfe.image.tag }}
         imagePullPolicy: {{ .Values.odfe.image.pullPolicy }}
         env:
-{{ if not .Values.odfe.security.enabled }}  
+{{ if not .Values.odfe.security.enabled }}
         - name: opendistro_security.disabled
           value: "true"
- {{ end }} 
+ {{ end }}
         - name: NAMESPACE
           valueFrom:
             fieldRef:
@@ -64,7 +69,7 @@ spec:
 {{- else }}
         - name: ELASTICSEARCH_HOSTS
           value: http://{{ template "fullname" . }}:9200
-{{- end }}   
+{{- end }}
         resources:
 {{ toYaml .Values.kibana.resources | indent 12 }}
         ports:
@@ -102,7 +107,7 @@ spec:
       volumes:
       - name: files
         secret:
-          secretName: {{ template "fullname" . }}-kibana-files  
-          defaultMode: 0777        
+          secretName: {{ template "fullname" . }}-kibana-files
+          defaultMode: 0777
 {{- end }}
 {{- end }}

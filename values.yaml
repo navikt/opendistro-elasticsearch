@@ -2,16 +2,19 @@ odfe:
   serviceType: ClusterIP
   ssl:
     http:
-      enabled: true
+      enabled: false
   env:
     TEAM: "teamname"
     cluster.name: "milkyway"
     http.compression: "true"
     network.host: "0.0.0.0"
     cluster.routing.allocation.disk.threshold_enabled: "false"
+  istio:
+    inject: "false"
+    enabled: false
   image:
     repository: amazon/opendistro-for-elasticsearch
-    tag: 1.2.0
+    tag: 1.9.0
     pullPolicy: Always
   stateful:
     class: "rook-ceph-block"
@@ -71,8 +74,8 @@ odfe:
         opendistro_security.audit.type: internal_elasticsearch
         opendistro_security.enable_snapshot_restore_privilege: "true"
         opendistro_security.check_snapshot_restore_write_privileges: "true"
-        opendistro_security.audit.config.disabled_rest_categories: NONE
-        opendistro_security.audit.config.disabled_transport_categories: NONE
+        opendistro_security.audit.config.disabled_rest_categories: AUTHENTICATED, GRANTED_PRIVILEGES
+        opendistro_security.audit.config.disabled_transport_categories: AUTHENTICATED, GRANTED_PRIVILEGES
         opendistro_security.ssl.transport.pemcert_filepath: node.pem
         opendistro_security.ssl.transport.pemkey_filepath: node-key.pem
         opendistro_security.ssl.transport.pemtrustedcas_filepath: root-ca.pem

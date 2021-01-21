@@ -1,0 +1,18 @@
+{{ if not .Values.odfe.istio.inject }}
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+    component: {{ template "fullname" . }}
+    team: {{ .Values.odfe.env.TEAM }}
+spec:
+  host: {{ template "fullname" . }}.teampam.svc.cluster.local
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+{{ end }}

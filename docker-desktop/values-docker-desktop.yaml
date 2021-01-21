@@ -1,8 +1,10 @@
 odfe:
   stateful:
     class: "hostpath"
-  security:
-    enabled: true
+  env:
+    TEAM: "teampam"
+  istio:
+    inject: "false"
 
 master:
   replicas: 3
