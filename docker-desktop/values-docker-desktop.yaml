@@ -1,4 +1,7 @@
 odfe:
+  image:
+    repository: ghcr.io/navikt/opendistro-elasticsearch
+    tag: 1.12.0
   stateful:
     class: "hostpath"
   env:

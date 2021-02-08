@@ -32,7 +32,7 @@ spec:
       serviceAccountName: {{ template "fullname" . }}
       containers:
       - name: {{ template "fullname" . }}-kibana
-        image: {{ .Values.odfe.image.repository }}-kibana:{{ .Values.odfe.image.tag }}
+        image: {{ .Values.kibana.image.repository }}:{{ .Values.kibana.image.tag }}
         imagePullPolicy: {{ .Values.odfe.image.pullPolicy }}
         env:
 {{ if not .Values.odfe.security.enabled }}

@@ -3,6 +3,8 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: {{ template "fullname" . }}
+  annotations:
+    "helm.sh/resource-policy": keep
   labels:
     app: {{ template "fullname" . }}
     team: {{ .Values.odfe.env.TEAM }}

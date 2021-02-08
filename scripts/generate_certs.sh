@@ -3,11 +3,15 @@
 set -e
 
 SCRIPTPATH=$(dirname $(realpath -s $0))
-echo $SCRIPTPATH
 cd $SCRIPTPATH/..
 mkdir -p .secrets
 cd .secrets
 
+echo "This will generate kubernetes certifications into folder $(PWD)"
+read -p "Are you sure? " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
 echo "Generating root CA, keep this key private and safe"
 openssl genrsa -out root-ca-key.pem 2048
 openssl req -new -x509 -sha256 -key root-ca-key.pem -out root-ca.pem -subj "/C=NO/ST=OSLO/L=OSLO/O=NAV/CN=ROOT" -days 3650
@@ -47,3 +51,5 @@ rm node-key-temp.pem
 rm node.csr
 rm monitor-key-temp.pem
 rm monitor.csr
+echo "before deploying the cluster you also need to place gcs-key.json to the .secret folder"
+fi
