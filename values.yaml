@@ -13,8 +13,8 @@ odfe:
     inject: "false"
     enabled: false
   image:
-    repository: amazon/opendistro-for-elasticsearch
-    tag: 1.9.0
+    repository: ghcr.io/navikt/opendistro-elasticsearch
+    tag: 1.12.0
     pullPolicy: IfNotPresent
   stateful:
     class: "rook-ceph-block"
@@ -338,9 +338,6 @@ data:
     size: 4Gi
 
 kibana:
-  image:
-    repository: amazon/opendistro-for-elasticsearch-kibana
-    tag: 1.12.0
   enabled: true
   password: "changeme"
   replicas: 1
