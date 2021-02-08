@@ -13,9 +13,9 @@ odfe:
     inject: "false"
     enabled: false
   image:
-    repository: amazon/opendistro-for-elasticsearch
-    tag: 1.9.0
-    pullPolicy: Always
+    repository: ghcr.io/navikt/opendistro-elasticsearch
+    tag: 1.12.0
+    pullPolicy: IfNotPresent
   stateful:
     class: "rook-ceph-block"
   security:
@@ -26,31 +26,27 @@ odfe:
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/node.pem"
         subPath: node.pem
-        readOnly: true
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/node-key.pem"
         subPath: node-key.pem
-        readOnly: true
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/root-ca.pem"
         subPath: root-ca.pem
-        readOnly: true
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/admin.pem"
         subPath: admin.pem
-        readOnly: true
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/admin-key.pem"
         subPath: admin-key.pem
-        readOnly: true
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/monitor.pem"
         subPath: monitor.pem
-        readOnly: true
       - name: certs
         mountPath: "/usr/share/elasticsearch/config/monitor-key.pem"
         subPath: monitor-key.pem
-        readOnly: true
+      - name: certs
+        mountPath: "/usr/share/elasticsearch/config/gcs-key.json"
+        subPath: gcs-key.json
       - name: config
         mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
         subPath: elasticsearch.yml
@@ -357,3 +353,6 @@ exporter:
 
 ingress:
   domain: localhost
+
+env:
+  cluster: docker-desktop
