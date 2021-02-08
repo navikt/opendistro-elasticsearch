@@ -25,7 +25,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
   HASH=$(docker run amazon/opendistro-for-elasticsearch sh /usr/share/elasticsearch/plugins/opendistro_security/tools/hash.sh -p $PASSWORD)
   echo "Generating secrets for certificates"
-  helm template ${ODFE_RELEASE} --set odfe.generate_secrets=true --show-only templates/odfe-cert-secrets.yaml . | kubectl apply -n ${ODFE_NAMESPACE} -f -
+  helm template ${ODFE_RELEASE} --set odfe.generate_secrets=true  --set env.cluster=$CLUSTER --show-only templates/odfe-cert-secrets.yaml . | kubectl apply -n ${ODFE_NAMESPACE} -f -
   echo "generate kubernetes secret for config files"
   helm template ${ODFE_RELEASE} --set odfe.generate_secrets=true --set odfe.security.password.hash="$HASH" --show-only templates/odfe-config-secrets.yaml . | kubectl apply -n ${ODFE_NAMESPACE} -f -
   echo "generating secret for kibana"

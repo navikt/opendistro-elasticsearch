@@ -2,10 +2,17 @@
 # Root CA
 set -e
 
+CLUSTER=$(kubectl config current-context)
+
+if [[ -z $CLUSTER ]]; then
+  echo "Cluster is not set"
+  exit 1
+fi
+
 SCRIPTPATH=$(dirname $(realpath -s $0))
 cd $SCRIPTPATH/..
-mkdir -p .secrets
-cd .secrets
+mkdir -p .secrets/$CLUSTER
+cd .secrets/$CLUSTER
 
 echo "This will generate kubernetes certifications into folder $(PWD)"
 read -p "Are you sure? " -n 1 -r
@@ -51,5 +58,5 @@ rm node-key-temp.pem
 rm node.csr
 rm monitor-key-temp.pem
 rm monitor.csr
-echo "before deploying the cluster you also need to place gcs-key.json to the .secret folder"
+echo "before deploying the cluster you also need to place gcs-key.json to the .secrets/$CLUSTER folder"
 fi

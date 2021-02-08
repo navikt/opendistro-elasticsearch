@@ -353,3 +353,6 @@ exporter:
 
 ingress:
   domain: localhost
+
+env:
+  cluster: docker-desktop
