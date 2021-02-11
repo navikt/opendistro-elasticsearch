@@ -11,7 +11,7 @@ metadata:
     role: data
     team: {{ .Values.odfe.env.TEAM }}
 spec:
-  minAvailable: {{ .Values.data.replicas }}
+  minAvailable: {{ sub .Values.data.replicas 1 }}
   selector:
     matchLabels:
       component: {{ template "fullname" . }}

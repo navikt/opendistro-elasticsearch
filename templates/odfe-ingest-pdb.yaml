@@ -11,7 +11,7 @@ metadata:
     role: ingest
     team: {{ .Values.odfe.env.TEAM }}
 spec:
-  minAvailable: {{ .Values.ingest.replicas }}
+  minAvailable: {{ sub .Values.ingest.replicas 1 }}
   selector:
     matchLabels:
       component: {{ template "fullname" . }}
