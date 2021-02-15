@@ -20,7 +20,7 @@ if [ "$CLUSTER" == "dev-gcp" ]; then
 elif [ "$CLUSTER" == "prod-gcp" ]; then
   VALUES_FILE="/Users/tuan/dev/pam-projects/pam-gitops/src/templates/odfe/clusters/prod-gcp/$ODFE_RELEASE-prod-gcp.yaml"
 elif [ "$CLUSTER" == "docker-desktop" ]; then
-  VALUES_FILE="/Users/tuan/dev/tuantranbkk/helm-odfe/docker-desktop/values-docker-desktop.yaml"
+  VALUES_FILE="docker-desktop/values-docker-desktop.yaml"
 else
   echo "Uknown cluster $CLUSTER"
   exit 1
