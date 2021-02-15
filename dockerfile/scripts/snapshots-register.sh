@@ -7,7 +7,7 @@ curl -u "$USER:$PASSWORD" -XPOST -H "Content-type: application/json" -d '{
   "type": "gcs",
   "settings":
   {
-    "bucket": "elasticsearch-arbeidsplassen-backup",
+    "bucket": "elasticsearch-arbeidsplassen-dev",
     "base_path": "es-backups"
   }
-}' http://localhost:9200/_snapshot/arbeidsplassen
+}' http://localhost:9200/_snapshot/stilling
