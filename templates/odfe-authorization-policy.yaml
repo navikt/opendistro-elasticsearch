@@ -64,7 +64,7 @@ spec:
     - from:
         - source:
             principals:
-              - cluster.local/ns/{{ .Values.odfe.env.TEAM }}/sa/pam-internalad-indexer
+              - "cluster.local/ns/{{ .Values.odfe.env.TEAM }}/sa/pam-internalad-indexer*"
       to:
         - operation:
             paths:
