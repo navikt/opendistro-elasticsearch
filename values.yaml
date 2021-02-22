@@ -356,3 +356,8 @@ ingress:
 
 env:
   cluster: docker-desktop
+
+virtualservice:
+  serviceaccount: localhost-service-account
+  gateway: localhost
+  domain: localhost
