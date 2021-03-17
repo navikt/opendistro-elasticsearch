@@ -110,8 +110,8 @@ Remember to change the password later in kibana. Finally deploy with security en
 > ./scripts/deploy-odfe.sh
 ```
 
-The chart is made to work for us, it is not fully generalized to work with other setups.
-We are open for pull request to make it work for other setups as well.
+The chart has been tested to work for docker-desktop and Google Cloud Platform and with Istio enabled in production.
+Please feel free to make pull requests so that it can work with other setups.
 
 ## Acknowledgements
 * This helm chart is based on the work of [Pires](https://github.com/pires/kubernetes-elasticsearch-cluster)
