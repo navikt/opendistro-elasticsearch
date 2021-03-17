@@ -6,7 +6,7 @@ Helm chart for Open Distro For Elasticsearch (ODFE), the community-driven, 100% 
 
 Prerequisites:
 * A kubernetes cluster
-* Rook/ceph 
+* Rook/ceph or other storage backends
 * Helm 3.x
 * openssl (for generating keys)
 
