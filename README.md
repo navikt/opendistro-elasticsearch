@@ -85,6 +85,10 @@ Depending on traffic load and index size, increase the memory for data and maste
 Security is now enabled by default. 
 ODFE supports a varity of authentication and authorization protocols like LDAP, Kerberos, SAML, OpenID and [more](https://opendistro.github.io/for-elasticsearch-docs/docs/security-configuration/). By default this installation creates a list of internal users with passwords. NOTE by convenient all users is set to the same password on startup, you can change this by logging into kibana and change the password [there](https://aws.amazon.com/blogs/opensource/change-passwords-open-distro-for-elasticsearch/). 
 
+### Istio support
+This chart is compatible with istio, you can enable/disable istio by setting the flag "odfe.istio.inject" to true/false.
+When running with istio, it will create some access policy, you need to change those access policy according to your services need.
+
 Use the script generate_certs.sh to generate self signed certs:
 ```
 > ./scripts/generate_certs.sh
@@ -102,6 +106,9 @@ Remember to change the password later in kibana. Finally deploy with security en
 ```
 > ./scripts/deploy-odfe.sh
 ```
+
+The chart is made to work for us, it is not fully generalized to work with other setups.
+We are open for pull request to make it work for other setups as well.
 
 ## Acknowledgements
 * This helm chart is based on the work of [Pires](https://github.com/pires/kubernetes-elasticsearch-cluster)
