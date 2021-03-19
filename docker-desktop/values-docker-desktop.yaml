@@ -5,6 +5,9 @@ odfe:
     TEAM: "teampam"
   istio:
     inject: "false"
+  ssl:
+    http:
+      enabled: "false"
 
 master:
   replicas: 3

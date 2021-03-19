@@ -1,6 +1,7 @@
 # opendistro-elasticsearch
 Helm chart for Open Distro For Elasticsearch (ODFE), the community-driven, 100% open source distribution of Elasticsearch with advanced security, alerting, deep performance analysis, and more. ODFE is supported by Amazon Web Services. 
 
+The chart has been tested to work for docker-desktop and Google Cloud Platform with Istio enabled in production.
 
 ## Installing the chart
 
@@ -110,8 +111,6 @@ Remember to change the password later in kibana. Finally deploy with security en
 > ./scripts/deploy-odfe.sh
 ```
 
-The chart has been tested to work for docker-desktop and Google Cloud Platform and with Istio enabled in production.
-Please feel free to make pull requests so that it can work with other setups.
 
 ## Acknowledgements
 * This helm chart is based on the work of [Pires](https://github.com/pires/kubernetes-elasticsearch-cluster)
