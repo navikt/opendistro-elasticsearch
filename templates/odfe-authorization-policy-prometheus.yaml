@@ -1,0 +1,27 @@
+{{ if .Values.odfe.istio.enabled }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ template "fullname" . }}-prometheus
+  labels:
+    app: {{ template "fullname" . }}
+    team: {{ .Values.odfe.env.TEAM }}
+spec:
+  rules:
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/istio-system/sa/prometheus
+      to:
+        - operation:
+            methods:
+              - GET
+            paths:
+              - /metrics
+            ports:
+              - "9114"
+  selector:
+    matchLabels:
+      component: {{ template "fullname" . }}
+      role: prometheus-exporter
+{{ end }}
