@@ -1,0 +1,23 @@
+{{ if .Values.odfe.istio.enabled }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ template "fullname" . }}-kibana
+  labels:
+    app: {{ template "fullname" . }}
+    team: {{ .Values.odfe.env.TEAM }}
+spec:
+  rules:
+    - from:
+        - source:
+            principals:
+              - cluster.local/ns/istio-system/sa/{{ .Values.virtualservice.serviceaccount }}
+      to:
+        - operation:
+            paths:
+              - '*'
+  selector:
+    matchLabels:
+      component: {{ template "fullname" . }}
+      role: kibana
+{{ end }}
