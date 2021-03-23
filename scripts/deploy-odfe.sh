@@ -2,6 +2,7 @@
 set -e
 CLUSTER=$(kubectl config current-context)
 ODFE_DIR=$(pwd)
+PAMCOPS=$(dirname $ODFE_DIR)/pam-cops
 
 if [[ -z $CLUSTER ]]; then
   echo "Cluster is not set"
@@ -16,9 +17,9 @@ if [[ -z "${ODFE_RELEASE}" ]]; then
   exit 1
 fi
 if [ "$CLUSTER" == "dev-gcp" ]; then
-  VALUES_FILE="/Users/tuan/dev/pam-projects/pam-gitops/src/templates/odfe/clusters/dev-gcp/$ODFE_RELEASE-dev-gcp.yaml"
+  VALUES_FILE="$PAMCOPS/conf/odfe/clusters/dev-gcp/$ODFE_RELEASE-dev-gcp.yaml"
 elif [ "$CLUSTER" == "prod-gcp" ]; then
-  VALUES_FILE="/Users/tuan/dev/pam-projects/pam-gitops/src/templates/odfe/clusters/prod-gcp/$ODFE_RELEASE-prod-gcp.yaml"
+  VALUES_FILE="$PAMCOPS/conf/odfe/clusters/prod-gcp/$ODFE_RELEASE-prod-gcp.yaml"
 elif [ "$CLUSTER" == "docker-desktop" ]; then
   VALUES_FILE="docker-desktop/values-docker-desktop.yaml"
 else
@@ -30,6 +31,7 @@ if [ ! -f $VALUES_FILE ]; then
   exit 1
 fi
 echo "current ODFE dir ${ODFE_DIR}"
+echo "current CONF dir ${PAMCOPS}"
 echo "deploying Opendistro Elasticsearch with release name: ${ODFE_RELEASE} cluster: $CLUSTER, namespace: ${ODFE_NAMESPACE} and value file: $VALUES_FILE"
 read -p "Are you sure? " -n 1 -r
 echo
