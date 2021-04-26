@@ -21,6 +21,9 @@ spec:
     - from:
       - namespaceSelector:
           matchLabels:
+            linkerd.io/is-control-plane: "true"
+      - namespaceSelector:
+          matchLabels:
             name: teampam
       - namespaceSelector:
           matchLabels:
@@ -36,6 +39,9 @@ spec:
             istio: ingressgateway
   egress:
     - to:
+      - namespaceSelector:
+          matchLabels:
+            linkerd.io/is-control-plane: "true"
       - namespaceSelector:
           matchLabels:
             name: istio-system
