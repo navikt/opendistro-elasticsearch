@@ -21,6 +21,13 @@ spec:
     - from:
       - namespaceSelector:
           matchLabels:
+            name: nais
+        podSelector:
+          matchLabels:
+            app: prometheus
+    - from:
+      - namespaceSelector:
+          matchLabels:
             linkerd.io/is-control-plane: "true"
     - from:
       - namespaceSelector:
