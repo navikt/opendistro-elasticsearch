@@ -5,7 +5,7 @@ kind: Ingress
 metadata:
   name: {{ template "fullname" . }}-analyzer
   annotations:
-    kubernetes.io/ingress.class: { { .Values.ingress.gateway } }
+    kubernetes.io/ingress.class: {{ .Values.ingress.gateway }}
     nginx.ingress.kubernetes.io/backend-protocol: HTTP
     nginx.ingress.kubernetes.io/use-regex: "true"
   labels:
