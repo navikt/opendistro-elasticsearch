@@ -1,4 +1,4 @@
-{{ if .Values.odfe.istio.enabled }}
+{{ if and .Values.odfe.istio.enabled .Values.virtualservice }}
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:

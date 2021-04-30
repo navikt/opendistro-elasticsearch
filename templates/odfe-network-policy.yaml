@@ -22,6 +22,27 @@ spec:
       - namespaceSelector:
           matchLabels:
             linkerd.io/is-control-plane: "true"
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            linkerd.io/extension: viz
+        podSelector:
+          matchLabels:
+            component: tap
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            linkerd.io/extension: viz
+        podSelector:
+          matchLabels:
+            component: prometheus
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: nginx
+        podSelector:
+          matchLabels:
+            app.kubernetes.io/instance: {{ .Values.ingress.gateway }}
       - namespaceSelector:
           matchLabels:
             name: teampam

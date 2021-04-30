@@ -104,6 +104,8 @@ kibana:
     ES_JAVA_OPTS: "-Xmx1024m"
 
 ingress:
+  domain: localhost
+  gateway: gw-dev-intern-nav-no
 
 virtualservice:
   serviceaccount: gw-dev-intern-nav-no-service-account

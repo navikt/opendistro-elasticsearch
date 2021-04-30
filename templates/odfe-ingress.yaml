@@ -5,7 +5,10 @@ kind: Ingress
 metadata:
   name: {{ template "fullname" . }}
   annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.gateway }}
     "helm.sh/resource-policy": keep
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    nginx.ingress.kubernetes.io/use-regex: "true"
   labels:
     app: {{ template "fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
