@@ -22,10 +22,7 @@ spec:
   template:
     metadata:
       annotations:
-        sidecar.istio.io/inject: "{{ .Values.odfe.istio.inject }}"
-        traffic.sidecar.istio.io/includeInboundPorts: "*"
-        traffic.sidecar.istio.io/excludeOutboundPorts: "9300"
-        traffic.sidecar.istio.io/excludeInboundPorts: "9300"
+        config.linkerd.io/skip-ports: "9300"
       labels:
         component: {{ template "fullname" . }}
         role: data
