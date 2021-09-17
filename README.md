@@ -1,4 +1,7 @@
 # opendistro-elasticsearch
+
+THIS IS DEPRECATED, and is replaced by [opensearch](https://github.com/navikt/pam-opensearch)
+
 Helm chart for Open Distro For Elasticsearch (ODFE), the community-driven, 100% open source distribution of Elasticsearch with advanced security, alerting, deep performance analysis, and more. ODFE is supported by Amazon Web Services. 
 
 The chart has been tested to work for docker-desktop and Google Cloud Platform with Istio enabled in production.
